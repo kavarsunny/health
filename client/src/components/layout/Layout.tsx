@@ -1,14 +1,17 @@
+import AnnouncementBar from './AnnouncementBar';
+import MarqueeStrip from './MarqueeStrip';
 import Navbar from './Navbar';
 import Footer from './Footer';
-import { Container } from 'react-bootstrap';
 import { Outlet } from 'react-router-dom';
 
 const Layout = () => (
-  <div className="d-flex flex-column min-vh-100">
+  <div style={{ display: 'flex', flexDirection: 'column', minHeight: '100vh', background: 'var(--hh-bg)' }}>
+    <AnnouncementBar />
     <Navbar />
-    <Container className="flex-grow-1 py-4">
+    <MarqueeStrip />
+    <main style={{ flex: 1 }}>
       <Outlet />
-    </Container>
+    </main>
     <Footer />
   </div>
 );

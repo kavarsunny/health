@@ -1,15 +1,14 @@
-import { PrismaClient } from '@prisma/client';
-
-const prisma = new PrismaClient();
+import mongoose from 'mongoose';
+import { env } from './env';
 
 export const connectDB = async (): Promise<void> => {
   try {
-    await prisma.$connect();
-    console.log('PostgreSQL Connected via Prisma');
+    const conn = await mongoose.connect(env.MONGODB_URI || process.env.DATABASE_URL || 'mongodb://localhost:27017/ecommerce');
+    console.log(`MongoDB Connected: ${conn.connection.host}`);
   } catch (error) {
-    console.error('PostgreSQL Connection Error:', error);
+    console.error('MongoDB Connection Error:', error);
     process.exit(1);
   }
 };
 
-export default prisma;
+export default mongoose;
