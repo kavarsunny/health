@@ -1,0 +1,191 @@
+/* ===== ShopVerse Custom Styles ===== */
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+
+:root {
+  --sv-primary: #667eea;
+  --sv-primary-dark: #5a67d8;
+  --sv-accent: #764ba2;
+  --sv-bg: #f5f7fb;
+  --sv-card-shadow: 0 2px 15px rgba(0, 0, 0, 0.06);
+  --sv-transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  background-color: var(--sv-bg);
+  color: #2d3748;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ===== Navbar ===== */
+.navbar-custom .nav-link {
+  color: rgba(255, 255, 255, 0.85) !important;
+  font-weight: 500;
+  transition: var(--sv-transition);
+  padding: 0.5rem 1rem !important;
+}
+
+.navbar-custom .nav-link:hover {
+  color: #ffd700 !important;
+  transform: translateY(-1px);
+}
+
+.navbar-custom .navbar-brand {
+  background: linear-gradient(135deg, #ffd700, #ffaa00);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* ===== Product Card ===== */
+.product-card {
+  transition: var(--sv-transition);
+  border-radius: 12px !important;
+  overflow: hidden;
+}
+
+.product-card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 12px 30px rgba(102, 126, 234, 0.15) !important;
+}
+
+/* ===== Buttons ===== */
+.btn-primary {
+  background: linear-gradient(135deg, var(--sv-primary), var(--sv-accent)) !important;
+  border: none !important;
+  font-weight: 600;
+  transition: var(--sv-transition);
+}
+
+.btn-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(102, 126, 234, 0.35);
+}
+
+.btn-outline-primary {
+  border-color: var(--sv-primary) !important;
+  color: var(--sv-primary) !important;
+  font-weight: 500;
+}
+
+.btn-outline-primary:hover {
+  background: var(--sv-primary) !important;
+  color: white !important;
+}
+
+/* ===== Cards ===== */
+.card {
+  border-radius: 12px !important;
+  transition: var(--sv-transition);
+}
+
+/* ===== Form Controls ===== */
+.form-control:focus,
+.form-select:focus {
+  border-color: var(--sv-primary);
+  box-shadow: 0 0 0 0.2rem rgba(102, 126, 234, 0.25);
+}
+
+/* ===== Hero Section ===== */
+.hero-section {
+  position: relative;
+  overflow: hidden;
+}
+
+.hero-section::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  right: -10%;
+  width: 400px;
+  height: 400px;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 50%;
+}
+
+.hero-section::after {
+  content: '';
+  position: absolute;
+  bottom: -30%;
+  left: -5%;
+  width: 300px;
+  height: 300px;
+  background: rgba(255, 255, 255, 0.04);
+  border-radius: 50%;
+}
+
+/* ===== Tables ===== */
+.table {
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.table-dark {
+  background: linear-gradient(135deg, #1a1a2e, #16213e) !important;
+}
+
+/* ===== Pagination ===== */
+.page-link {
+  color: var(--sv-primary);
+  border: none;
+  margin: 0 2px;
+  border-radius: 8px !important;
+}
+
+.page-item.active .page-link {
+  background: var(--sv-primary);
+  border-color: var(--sv-primary);
+}
+
+/* ===== Smooth Scrollbar ===== */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #c4c4c4;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #a8a8a8;
+}
+
+/* ===== Animations ===== */
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.fade-in-up {
+  animation: fadeInUp 0.5s ease-out;
+}
+
+/* ===== Badge Override ===== */
+.badge {
+  font-weight: 500;
+  letter-spacing: 0.3px;
+}
+
+/* ===== Responsive ===== */
+@media (max-width: 768px) {
+  .hero-section {
+    min-height: 280px !important;
+    padding: 2rem !important;
+  }
+
+  .hero-section h1 {
+    font-size: 1.8rem !important;
+  }
+}

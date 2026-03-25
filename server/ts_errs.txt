@@ -1,0 +1,22 @@
+src/controllers/auth.controller.ts(20,59): error TS2339: Property '_id' does not exist on type 'Omit<{ id: string; name: string; email: string; password: string; role: string; createdAt: Date; updatedAt: Date; }, "password">'.
+src/controllers/cart.controller.ts(8,52): error TS2339: Property '_id' does not exist on type 'Omit<{ id: string; name: string; email: string; password: string; role: string; createdAt: Date; updatedAt: Date; }, "password">'.
+src/controllers/cart.controller.ts(14,54): error TS2339: Property '_id' does not exist on type 'Omit<{ id: string; name: string; email: string; password: string; role: string; createdAt: Date; updatedAt: Date; }, "password">'.
+src/controllers/cart.controller.ts(19,59): error TS2339: Property '_id' does not exist on type 'Omit<{ id: string; name: string; email: string; password: string; role: string; createdAt: Date; updatedAt: Date; }, "password">'.
+src/controllers/cart.controller.ts(19,74): error TS2345: Argument of type 'string | string[]' is not assignable to parameter of type 'string'.
+  Type 'string[]' is not assignable to type 'string'.
+src/controllers/cart.controller.ts(24,54): error TS2339: Property '_id' does not exist on type 'Omit<{ id: string; name: string; email: string; password: string; role: string; createdAt: Date; updatedAt: Date; }, "password">'.
+src/controllers/category.controller.ts(18,40): error TS2345: Argument of type 'string | string[]' is not assignable to parameter of type 'string'.
+  Type 'string[]' is not assignable to type 'string'.
+src/controllers/order.controller.ts(9,57): error TS2339: Property '_id' does not exist on type 'Omit<{ id: string; name: string; email: string; password: string; role: string; createdAt: Date; updatedAt: Date; }, "password">'.
+src/controllers/order.controller.ts(14,59): error TS2339: Property '_id' does not exist on type 'Omit<{ id: string; name: string; email: string; password: string; role: string; createdAt: Date; updatedAt: Date; }, "password">'.
+src/controllers/order.controller.ts(20,48): error TS2345: Argument of type 'string | string[]' is not assignable to parameter of type 'string'.
+  Type 'string[]' is not assignable to type 'string'.
+src/controllers/order.controller.ts(20,73): error TS2339: Property '_id' does not exist on type 'Omit<{ id: string; name: string; email: string; password: string; role: string; createdAt: Date; updatedAt: Date; }, "password">'.
+src/controllers/order.controller.ts(30,53): error TS2345: Argument of type 'string | string[]' is not assignable to parameter of type 'string'.
+  Type 'string[]' is not assignable to type 'string'.
+src/controllers/product.controller.ts(12,52): error TS2345: Argument of type 'string | string[]' is not assignable to parameter of type 'string'.
+  Type 'string[]' is not assignable to type 'string'.
+src/controllers/product.controller.ts(22,51): error TS2345: Argument of type 'string | string[]' is not assignable to parameter of type 'string'.
+  Type 'string[]' is not assignable to type 'string'.
+src/controllers/product.controller.ts(27,38): error TS2345: Argument of type 'string | string[]' is not assignable to parameter of type 'string'.
+  Type 'string[]' is not assignable to type 'string'.

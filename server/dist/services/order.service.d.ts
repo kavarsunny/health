@@ -1,0 +1,71 @@
+import { IShippingAddress } from '../types';
+export declare const createOrder: (userId: string, shippingAddress: IShippingAddress, paymentMethod: string) => Promise<any>;
+export declare const getUserOrders: (userId: string) => Promise<any[]>;
+export declare const getOrderById: (orderId: string, userId: string, isAdmin: boolean) => Promise<{
+    _id: string;
+    user: {
+        name: string;
+        email: string;
+    };
+    items: {
+        id: string;
+        name: string;
+        price: number;
+        image: string;
+        quantity: number;
+        orderId: string;
+        productId: string;
+    }[];
+    id: string;
+    createdAt: Date;
+    updatedAt: Date;
+    paymentMethod: string;
+    itemsPrice: number;
+    shippingPrice: number;
+    taxPrice: number;
+    totalPrice: number;
+    isPaid: boolean;
+    paidAt: Date | null;
+    isDelivered: boolean;
+    deliveredAt: Date | null;
+    status: string;
+    userId: string;
+    shippingFullName: string | null;
+    shippingAddress: string | null;
+    shippingCity: string | null;
+    shippingPostalCode: string | null;
+    shippingCountry: string | null;
+}>;
+export declare const getAllOrders: () => Promise<any[]>;
+export declare const updateOrderStatus: (orderId: string, status: string) => Promise<{
+    _id: string;
+    items: {
+        id: string;
+        name: string;
+        price: number;
+        image: string;
+        quantity: number;
+        orderId: string;
+        productId: string;
+    }[];
+    id: string;
+    createdAt: Date;
+    updatedAt: Date;
+    paymentMethod: string;
+    itemsPrice: number;
+    shippingPrice: number;
+    taxPrice: number;
+    totalPrice: number;
+    isPaid: boolean;
+    paidAt: Date | null;
+    isDelivered: boolean;
+    deliveredAt: Date | null;
+    status: string;
+    userId: string;
+    shippingFullName: string | null;
+    shippingAddress: string | null;
+    shippingCity: string | null;
+    shippingPostalCode: string | null;
+    shippingCountry: string | null;
+}>;
+//# sourceMappingURL=order.service.d.ts.map
