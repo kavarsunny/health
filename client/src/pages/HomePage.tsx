@@ -4,12 +4,17 @@ import { Link } from 'react-router-dom';
 import { AppDispatch, RootState } from '../store/store';
 import { fetchProducts } from '../store/slices/productSlice';
 
+import AnnouncementBar from '../components/layout/AnnouncementBar';
+import MarqueeStrip from '../components/layout/MarqueeStrip';
 import HeroSection from '../components/home/HeroSection';
+import QuickCategories from '../components/home/QuickCategories';
 import CategoryGrid from '../components/home/CategoryGrid';
-import FarmerStories from '../components/home/FarmerStories';
 import SeasonalBanner from '../components/home/SeasonalBanner';
+import FarmerStories from '../components/home/FarmerStories';
+import BlogSection from '../components/home/BlogSection';
 import TrustBadges from '../components/home/TrustBadges';
 import TestimonialsNewsletter from '../components/home/TestimonialsNewsletter';
+import ProductCard from '../components/product/ProductCard';
 
 const HomePage = () => {
   const dispatch = useDispatch<AppDispatch>();
@@ -22,57 +27,37 @@ const HomePage = () => {
   return (
     <>
       <HeroSection />
+      <AnnouncementBar />
+      <MarqueeStrip />
+      <QuickCategories />
+      <TrustBadges />
 
       {/* Featured Products */}
-      <section className="hh-section">
+      <section className="ms-section">
         <div className="container">
-          <div className="hh-section-header">
-            <div className="hh-eyebrow">Handpicked for You</div>
-            <h2 className="hh-section-title">Featured Products</h2>
-            <p className="hh-section-sub">
+          <div className="ms-section-header">
+            <div className="ms-section-eyebrow">Handpicked for You</div>
+            <h2 className="ms-section-title">Featured Products ✨</h2>
+            <p className="ms-section-sub">
               Top-rated farm-fresh produce, selected by our quality team every week.
             </p>
           </div>
 
           {loading ? (
-            <div className="hh-loader"><div className="hh-spinner" /></div>
+            <div className="ms-loader"><div className="ms-spinner" /></div>
           ) : (
             <div className="row g-4">
               {products.slice(0, 8).map((product) => (
                 <div key={product._id} className="col-6 col-md-4 col-lg-3">
-                  <div className="hh-product-card">
-                    <div className="hh-product-img-wrap">
-                      <div style={{
-                        width: '100%', height: '100%',
-                        background: 'linear-gradient(145deg, #0d2e14, #0a1a0e)',
-                        display: 'flex', alignItems: 'center', justifyContent: 'center',
-                        fontSize: '3.5rem', minHeight: 160,
-                      }}>
-                        🌿
-                      </div>
-                      <span className="hh-product-badge">Fresh</span>
-                    </div>
-                    <div className="hh-product-body">
-                      <div className="hh-product-name">{product.name}</div>
-                      <div className="hh-product-farmer">🌾 {(product as any).farmerName || 'Local Farm'}</div>
-                      <div className="hh-product-price">
-                        ₹{product.price}
-                        {(product as any).mrp && <span className="old-price">₹{(product as any).mrp}</span>}
-                      </div>
-                    </div>
-                    <div className="hh-product-footer">
-                      <button className="hh-add-cart-btn">Add to Cart</button>
-                      <button className="hh-wishlist-btn"><i className="bi bi-heart" /></button>
-                    </div>
-                  </div>
+                  <ProductCard product={product} />
                 </div>
               ))}
             </div>
           )}
 
           <div className="text-center mt-4">
-            <Link to="/products" className="hh-btn-primary" style={{ display: 'inline-flex' }}>
-              View All Products <i className="bi bi-arrow-right ms-2" />
+            <Link to="/products" className="ms-btn-outline">
+              View All Products <i className="bi bi-arrow-right" />
             </Link>
           </div>
         </div>
@@ -81,7 +66,7 @@ const HomePage = () => {
       <CategoryGrid />
       <SeasonalBanner />
       <FarmerStories />
-      <TrustBadges />
+      <BlogSection />
       <TestimonialsNewsletter />
     </>
   );

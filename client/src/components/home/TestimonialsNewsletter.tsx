@@ -1,98 +1,79 @@
-import { useState } from 'react';
-
 const testimonials = [
-  { name: 'Priya Sharma', role: 'Home Chef, Bangalore', body: 'The tomatoes I received were so fresh I could smell the vine! Taste is incomparable to supermarket produce. Will never go back!', rating: 5, initials: 'PS' },
-  { name: 'Aryan Mehta',  role: 'Nutritionist, Mumbai',   body: 'I recommend HealthyHaat to all my clients. The organic certification and direct farmer connect gives me complete confidence in food safety.', rating: 5, initials: 'AM' },
-  { name: 'Kavita Nair',  role: 'Mother of 2, Kochi',   body: 'My kids now actually love vegetables! The spinach and carrots are so flavourful and the packaging is eco-friendly too. Absolute win!', rating: 5, initials: 'KN' },
+  {
+    initials: 'PS', bg: '#e8f5e9', color: '#336939',
+    name: 'Priya Sharma',
+    loc: 'Mumbai, Maharashtra',
+    rating: 5,
+    text: '"HealthyHaat has completely changed how I shop for groceries. The vegetables are so fresh and I can actually taste the difference. My family loves it!"',
+  },
+  {
+    initials: 'RK', bg: '#e3f2fd', color: '#1565c0',
+    name: 'Rajesh Kumar',
+    loc: 'Bangalore, Karnataka',
+    rating: 5,
+    text: '"Finally a platform that connects me directly with farmers. I know exactly where my food comes from. Delivery is prompt and packaging is eco-friendly."',
+  },
+  {
+    initials: 'AP', bg: '#fff8e1', color: '#e65100',
+    name: 'Anita Patel',
+    loc: 'Ahmedabad, Gujarat',
+    rating: 5,
+    text: '"The organic mangoes were absolutely divine! Way better than what I get in the supermarket. Will definitely be ordering every season!"',
+  },
 ];
 
-const Newsletter = () => {
-  const [email, setEmail] = useState('');
-  const [subscribed, setSubscribed] = useState(false);
-
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (email) { setSubscribed(true); }
-  };
-
-  return (
-    <>
+const TestimonialsNewsletter = () => (
+  <section className="ms-section">
+    <div className="container">
       {/* Testimonials */}
-      <section className="hh-section">
-        <div className="container">
-          <div className="hh-section-header">
-            <div className="hh-eyebrow">Customer Voices</div>
-            <h2 className="hh-section-title">What People Are Saying</h2>
-            <p className="hh-section-sub">
-              Real reviews from real customers who care about what they eat.
-            </p>
-          </div>
-          <div className="row g-4">
-            {testimonials.map((t) => (
-              <div key={t.name} className="col-md-4">
-                <div className="hh-testimonial-card">
-                  <span className="quote-icon">"</span>
-                  <div className="hh-stars">{'★'.repeat(t.rating)}</div>
-                  <p className="hh-testimonial-body">"{t.body}"</p>
-                  <div className="hh-testimonial-author">
-                    <div style={{
-                      width: 46, height: 46, borderRadius: '50%',
-                      background: 'var(--hh-grad-primary)',
-                      display: 'flex', alignItems: 'center', justifyContent: 'center',
-                      color: '#000', fontWeight: 700, fontSize: '0.9rem', flexShrink: 0,
-                    }}>
-                      {t.initials}
-                    </div>
-                    <div>
-                      <div className="hh-testimonial-name">{t.name}</div>
-                      <div className="hh-testimonial-role">{t.role}</div>
-                    </div>
-                  </div>
+      <div className="ms-section-header">
+        <div className="ms-section-eyebrow">Customer Love</div>
+        <h2 className="ms-section-title">What Our Customers Say</h2>
+        <p className="ms-section-sub">Join over 2 lakh happy customers who trust HealthyHaat for their daily nutrition.</p>
+      </div>
+      <div className="row g-4 mb-5">
+        {testimonials.map((t) => (
+          <div key={t.name} className="col-md-4">
+            <div className="ms-testimonial-card">
+              <div className="ms-testimonial-stars">
+                {'★'.repeat(t.rating)}{'☆'.repeat(5 - t.rating)}
+              </div>
+              <p className="ms-testimonial-text">{t.text}</p>
+              <div className="ms-testimonial-author">
+                <div className="ms-testimonial-avatar" style={{ background: t.bg, color: t.color, fontWeight: 800, fontSize: '0.95rem' }}>{t.initials}</div>
+                <div>
+                  <div className="ms-testimonial-name">{t.name}</div>
+                  <div className="ms-testimonial-loc">{t.loc}</div>
                 </div>
               </div>
-            ))}
+            </div>
           </div>
-        </div>
-      </section>
+        ))}
+      </div>
 
       {/* Newsletter */}
-      <section className="hh-section" style={{ paddingTop: 0 }}>
-        <div className="container">
-          <div className="hh-newsletter">
-            <div className="hh-eyebrow" style={{ justifyContent: 'center', display: 'flex' }}>Stay in the Loop</div>
-            <h2 className="hh-section-title">Get ₹100 off your First Order</h2>
-            <p className="hh-section-sub">
-              Join 50,000+ subscribers and get seasonal recipes, farm news & exclusive deals — no spam, ever.
-            </p>
+      <div className="ms-newsletter-section">
+        <div className="ms-section-eyebrow" style={{ justifyContent: 'center', display: 'flex' }}>NEWSLETTER</div>
+        <h3 className="ms-newsletter-title">Stay Fresh with HealthyHaat</h3>
+        <p className="ms-newsletter-sub">
+          Get exclusive deals, seasonal recipes, and updates from our farming community — right in your inbox.
+        </p>
+        <form className="ms-newsletter-form" onSubmit={(e) => e.preventDefault()}>
+          <input
+            type="email"
+            className="ms-newsletter-input"
+            placeholder="Enter your email address…"
+          />
+          <button type="submit" className="ms-newsletter-btn">
+            Subscribe <i className="bi bi-arrow-right" />
+          </button>
+        </form>
+        <p style={{ marginTop: '12px', fontSize: '0.78rem', color: 'var(--ms-text-muted)' }}>
+          No spam, ever. Unsubscribe anytime.
+        </p>
+      </div>
+    </div>
+  </section>
+);
 
-            {subscribed ? (
-              <div style={{ marginTop: '2rem', padding: '1rem 2rem', background: 'rgba(0,200,83,0.12)', border: '1px solid rgba(0,200,83,0.35)', borderRadius: 'var(--hh-radius-md)', color: 'var(--hh-primary)', fontWeight: 600 }}>
-                🎉 You're subscribed! Check your inbox for your ₹100 coupon.
-              </div>
-            ) : (
-              <form onSubmit={handleSubmit} className="hh-newsletter-form">
-                <input
-                  type="email"
-                  className="hh-newsletter-input"
-                  placeholder="Enter your email address"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  required
-                />
-                <button type="submit" className="hh-btn-primary">
-                  Subscribe & Save <i className="bi bi-envelope-check" />
-                </button>
-              </form>
-            )}
-
-            <p style={{ fontSize: '0.75rem', color: 'var(--hh-text-muted)', marginTop: '1rem' }}>
-              🔒 No spam. Unsubscribe anytime. We respect your privacy.
-            </p>
-          </div>
-        </div>
-      </section>
-    </>
-  );
-};
-
-export default Newsletter;
+export default TestimonialsNewsletter;

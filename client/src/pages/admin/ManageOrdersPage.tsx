@@ -1,14 +1,19 @@
 import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { Table, Badge, Form } from 'react-bootstrap';
 import { AppDispatch, RootState } from '../../store/store';
 import { fetchAllOrders, changeOrderStatus } from '../../store/slices/orderSlice';
-import Loader from '../../components/common/Loader';
-import AlertMessage from '../../components/common/AlertMessage';
 
 const statuses = ['pending', 'processing', 'shipped', 'delivered', 'cancelled'];
-const statusColor: Record<string, string> = {
-  pending: 'warning', processing: 'info', shipped: 'primary', delivered: 'success', cancelled: 'danger',
+
+const statusPill = (s: string) => {
+  const map: Record<string, string> = {
+    pending: 'ms-pill ms-pill-yellow',
+    processing: 'ms-pill ms-pill-blue',
+    shipped: 'ms-pill ms-pill-blue',
+    delivered: 'ms-pill ms-pill-green',
+    cancelled: 'ms-pill ms-pill-red',
+  };
+  return map[s] || 'ms-pill ms-pill-gray';
 };
 
 const ManageOrdersPage = () => {
@@ -21,39 +26,126 @@ const ManageOrdersPage = () => {
     dispatch(changeOrderStatus({ id, status }));
   };
 
-  if (loading) return <Loader />;
-  if (error) return <AlertMessage variant="danger">{error}</AlertMessage>;
-
   return (
     <>
-      <h2 className="fw-bold mb-4"><i className="bi bi-clipboard-data me-2" />Manage Orders</h2>
-      {allOrders.length === 0 ? (
-        <AlertMessage variant="info">No orders found.</AlertMessage>
-      ) : (
-        <Table striped bordered hover responsive className="shadow-sm">
-          <thead className="table-dark">
-            <tr><th>ID</th><th>Date</th><th>Customer</th><th>Items</th><th>Total</th><th>Status</th><th>Paid</th><th>Update</th></tr>
-          </thead>
-          <tbody>
-            {allOrders.map((o) => (
-              <tr key={o._id}>
-                <td className="small">{o._id.slice(-8)}</td>
-                <td>{new Date(o.createdAt).toLocaleDateString()}</td>
-                <td>{o.user}</td>
-                <td>{o.items.length}</td>
-                <td className="fw-semibold">${o.totalPrice.toFixed(2)}</td>
-                <td><Badge bg={statusColor[o.status] || 'secondary'} className="text-uppercase">{o.status}</Badge></td>
-                <td>{o.isPaid ? <i className="bi bi-check-circle-fill text-success" /> : <i className="bi bi-x-circle text-danger" />}</td>
-                <td>
-                  <Form.Select size="sm" value={o.status} onChange={(e) => handleStatusChange(o._id, e.target.value)} style={{ minWidth: 130 }}>
-                    {statuses.map((s) => <option key={s} value={s}>{s.charAt(0).toUpperCase() + s.slice(1)}</option>)}
-                  </Form.Select>
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </Table>
-      )}
+      <div className="ms-admin-topbar">
+        <div className="ms-admin-topbar-left">
+          <div>
+            <h4>Manage Orders</h4>
+            <div className="ms-admin-breadcrumb">
+              <a href="/">Store</a>
+              <i className="bi bi-chevron-right" style={{ fontSize: '0.65rem' }} />
+              <span style={{ color: '#336939', fontWeight: 600 }}>Orders</span>
+            </div>
+          </div>
+        </div>
+        <div className="ms-admin-topbar-right">
+          <button className="ms-admin-icon-btn" title="Export">
+            <i className="bi bi-download" />
+          </button>
+          <button className="ms-admin-icon-btn" title="Refresh" onClick={() => dispatch(fetchAllOrders())}>
+            <i className="bi bi-arrow-clockwise" />
+          </button>
+        </div>
+      </div>
+
+      <div className="ms-admin-main">
+        {loading && (
+          <div className="ms-loader"><div className="ms-spinner" /></div>
+        )}
+        {error && (
+          <div className="ms-alert ms-alert-danger">{error}</div>
+        )}
+
+        {/* Stats Row */}
+        <div className="row g-3 mb-4">
+          {[
+            { label: 'Total Orders', val: allOrders.length, color: '#336939', icon: 'bi-cart-check-fill' },
+            { label: 'Pending', val: allOrders.filter(o => o.status === 'pending').length, color: '#f59e0b', icon: 'bi-clock-fill' },
+            { label: 'In Transit', val: allOrders.filter(o => o.status === 'shipped').length, color: '#0ea5e9', icon: 'bi-truck' },
+            { label: 'Delivered', val: allOrders.filter(o => o.status === 'delivered').length, color: '#22c55e', icon: 'bi-check-circle-fill' },
+          ].map((s) => (
+            <div key={s.label} className="col-6 col-xl-3">
+              <div className="ms-kpi-card" style={{ '--kpi-color': s.color } as any}>
+                <div className="ms-kpi-top">
+                  <div className="ms-kpi-icon" style={{ '--kpi-color': s.color } as any}>
+                    <i className={`bi ${s.icon}`} style={{ color: s.color, fontSize: '1.2rem' }} />
+                  </div>
+                </div>
+                <div className="ms-kpi-value">{s.val}</div>
+                <div className="ms-kpi-label">{s.label}</div>
+              </div>
+            </div>
+          ))}
+        </div>
+
+        {/* Orders Table */}
+        <div className="ms-chart-card">
+          <div className="ms-chart-header">
+            <div>
+              <div className="ms-chart-title">All Orders</div>
+              <div className="ms-chart-sub">{allOrders.length} total orders</div>
+            </div>
+          </div>
+          <div style={{ overflowX: 'auto' }}>
+            {allOrders.length === 0 ? (
+              <div style={{ padding: '3rem', textAlign: 'center', color: '#94a3b8' }}>
+                <i className="bi bi-inbox" style={{ fontSize: '2.5rem', display: 'block', marginBottom: 12 }} />
+                No orders found.
+              </div>
+            ) : (
+              <table className="ms-data-table">
+                <thead>
+                  <tr>
+                    <th>Order ID</th>
+                    <th>Date</th>
+                    <th>Customer</th>
+                    <th>Items</th>
+                    <th>Total</th>
+                    <th>Status</th>
+                    <th>Paid</th>
+                    <th>Update Status</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {allOrders.map((o) => (
+                    <tr key={o._id}>
+                      <td className="ms-td-name">#{o._id.slice(-8).toUpperCase()}</td>
+                      <td className="ms-td-muted">{new Date(o.createdAt).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' })}</td>
+                      <td>
+                        <div style={{ display: 'flex', alignItems: 'center' }}>
+                          <span className="ms-tbl-avatar">{String(o.user).charAt(0).toUpperCase()}</span>
+                          <span style={{ fontSize: '0.85rem', color: '#334155' }}>{o.user}</span>
+                        </div>
+                      </td>
+                      <td className="ms-td-muted">{o.items.length}</td>
+                      <td style={{ fontWeight: 700, color: '#336939' }}>₹{o.totalPrice.toFixed(0)}</td>
+                      <td><span className={statusPill(o.status)}>{o.status}</span></td>
+                      <td>
+                        {o.isPaid
+                          ? <span className="ms-pill ms-pill-green"><i className="bi bi-check" />Paid</span>
+                          : <span className="ms-pill ms-pill-red"><i className="bi bi-x" />Unpaid</span>}
+                      </td>
+                      <td>
+                        <select
+                          className="ms-admin-form-control ms-admin-form-select"
+                          style={{ width: 140, padding: '5px 32px 5px 10px', fontSize: '0.82rem' }}
+                          value={o.status}
+                          onChange={(e) => handleStatusChange(o._id, e.target.value)}
+                        >
+                          {statuses.map((s) => (
+                            <option key={s} value={s}>{s.charAt(0).toUpperCase() + s.slice(1)}</option>
+                          ))}
+                        </select>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            )}
+          </div>
+        </div>
+      </div>
     </>
   );
 };
