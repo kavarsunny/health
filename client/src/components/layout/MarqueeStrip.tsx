@@ -1,17 +1,17 @@
 const items = [
-  '🌾 Organic Wheat', '🥦 Fresh Broccoli', '🍅 Sun-Ripened Tomatoes', '🥕 Himalayan Carrots',
-  '🌽 Sweet Corn', '🍇 Black Grapes', '🫚 Cold-Pressed Oils', '🍓 Strawberries',
-  '🧅 Red Onions', '🥑 Avocados', '🌿 Fresh Herbs', '🍋 Organic Lemons',
-  '🫛 Green Peas', '🌾 Brown Rice', '🥬 Baby Spinach', '🫐 Blueberries',
+  '🌿 100% Organic', '🚚 Free Shipping ₹499+', '🥦 Farm Fresh', '⭐ Trusted by 2L+ Customers',
+  '🔒 Secure Payments', '🌾 15K+ Verified Farmers', '♻️ Eco Friendly Packaging', '💚 No Preservatives',
+  '🌿 100% Organic', '🚚 Free Shipping ₹499+', '🥦 Farm Fresh', '⭐ Trusted by 2L+ Customers',
+  '🔒 Secure Payments', '🌾 15K+ Verified Farmers', '♻️ Eco Friendly Packaging', '💚 No Preservatives',
 ];
 
 const MarqueeStrip = () => (
-  <div className="hh-marquee-strip">
-    <div className="hh-marquee-inner">
-      {[...items, ...items].map((item, i) => (
-        <span key={i} className="hh-marquee-item">
+  <div className="ms-marquee-strip">
+    <div className="ms-marquee-inner">
+      {items.map((item, i) => (
+        <span key={i} className="ms-marquee-item">
           {item}
-          <span className="dot" />
+          <span className="ms-marquee-dot" />
         </span>
       ))}
     </div>

@@ -1,79 +1,60 @@
 const farmers = [
   {
-    name: 'Ramesh Patel',
-    location: 'Anand, Gujarat',
-    specialty: 'Organic Dairy Farmer',
-    story: 'For three generations our family has been rearing cattle the traditional way — no hormones, no antibiotics. My A2 ghee and paneer reach your kitchen within 48 hours of production.',
-    emoji: '🐄',
-    products: 24,
-    rating: 4.9,
-  },
-  {
-    name: 'Sunita Devi',
+    initials: 'RP',
+    avatarColor: '#e8f5e9', iconColor: '#336939',
+    name: 'Ramu Patil',
     location: 'Nashik, Maharashtra',
-    specialty: 'Certified Organic Grapes',
-    story: 'I switched to organic farming 6 years ago and it transformed both my land and my income. Every bunch of grapes is hand-picked and cold-stored to preserve freshness.',
-    emoji: '🍇',
-    products: 12,
-    rating: 4.8,
+    bio: 'Third-generation farmer growing premium grapes and tomatoes using natural farming methods passed down through his family.',
+    tag: 'Organic Certified',
+    products: '350+ kg weekly',
   },
   {
-    name: 'Arjun Singh',
-    location: 'Amritsar, Punjab',
-    specialty: 'Heritage Grain Farmer',
-    story: 'I grow ancient wheat varieties that were almost lost — Khorasan, Emmer, and Einkorn. These grains are higher in protein and nutrients than modern hybrids.',
-    emoji: '🌾',
-    products: 18,
-    rating: 4.9,
+    initials: 'KR',
+    avatarColor: '#e3f2fd', iconColor: '#1565c0',
+    name: 'Kavitha Reddy',
+    location: 'Kurnool, Andhra Pradesh',
+    bio: 'Former software engineer turned organic farmer, Kavitha grows heirloom vegetables and has inspired 20+ local farmers to go organic.',
+    tag: 'Natural Farming',
+    products: '200+ kg weekly',
+  },
+  {
+    initials: 'SC',
+    avatarColor: '#fff8e1', iconColor: '#e65100',
+    name: 'Suresh Choudhary',
+    location: 'Sikar, Rajasthan',
+    bio: 'Specializing in cold-pressed mustard oil and traditional rajasthani spices, Suresh uses desert-adapted organic techniques.',
+    tag: 'Traditional Farming',
+    products: '180+ litres weekly',
   },
 ];
 
 const FarmerStories = () => (
-  <section className="hh-section">
+  <section className="ms-section">
     <div className="container">
-      <div className="hh-section-header">
-        <div className="hh-eyebrow">Real People. Real Fields.</div>
-        <h2 className="hh-section-title">Farmer Stories</h2>
-        <p className="hh-section-sub">
-          Meet the passionate humans behind every bite — growing food with love, tradition, and science.
+      <div className="ms-section-header">
+        <div className="ms-section-eyebrow">Our Farmers</div>
+        <h2 className="ms-section-title">Meet the People Behind Your Food</h2>
+        <p className="ms-section-sub">
+          Every product you buy directly supports these verified, passionate farmers who grow with care and integrity.
         </p>
       </div>
-
       <div className="row g-4">
         {farmers.map((f) => (
           <div key={f.name} className="col-md-4">
-            <div className="hh-farmer-card">
-              {/* Hero Band */}
-              <div style={{
-                background: 'linear-gradient(135deg, #0d2e14, #0a1a0e)',
-                padding: '2rem 1.5rem',
-                textAlign: 'center',
-                fontSize: '4rem',
-                borderBottom: '1px solid var(--hh-border)',
-              }}>
-                {f.emoji}
+            <div className="ms-farmer-card">
+              <div className="ms-farmer-img-wrap" style={{ background: f.avatarColor, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 8 }}>
+                <div style={{ width: 72, height: 72, borderRadius: '50%', background: f.iconColor, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '1.6rem', fontWeight: 800, color: '#fff', boxShadow: `0 4px 16px ${f.iconColor}44` }}>{f.initials}</div>
+                <div style={{ fontSize: '0.75rem', fontWeight: 700, color: f.iconColor, textTransform: 'uppercase', letterSpacing: 1 }}><i className="bi bi-patch-check-fill" style={{ marginRight: 4 }} />Verified</div>
               </div>
-              <div className="hh-farmer-body">
-                <div className="hh-farmer-name">{f.name}</div>
-                <div className="hh-farmer-location">
-                  <i className="bi bi-geo-alt-fill" /> {f.location}
-                </div>
-                <p className="hh-farmer-story">{f.story}</p>
-                <div style={{ display: 'flex', gap: '0.6rem', marginTop: '1rem', flexWrap: 'wrap' }}>
-                  <span className="hh-farmer-chip">📦 {f.products} Products</span>
-                  <span className="hh-farmer-chip">⭐ {f.rating} Rating</span>
-                  <span className="hh-farmer-chip">✅ Verified</span>
-                </div>
+              <div className="ms-farmer-body">
+                <div className="ms-farmer-name">{f.name}</div>
+                <div className="ms-farmer-location"><i className="bi bi-geo-alt-fill" style={{ color: '#e53935', marginRight: 4 }} />{f.location} · {f.products}</div>
+                <p className="ms-farmer-bio">{f.bio}</p>
+                <span className="ms-farmer-tag">{f.tag}</span>
               </div>
             </div>
           </div>
         ))}
-      </div>
-
-      <div className="text-center mt-4">
-        <a href="/farmers" className="hh-btn-outline" style={{ display: 'inline-flex' }}>
-          Meet All Farmers <i className="bi bi-arrow-right ms-2" />
-        </a>
       </div>
     </div>
   </section>

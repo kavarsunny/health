@@ -2,55 +2,57 @@ import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 
 const SeasonalBanner = () => {
-  const deadline = new Date('2026-04-05T00:00:00').getTime();
-  const [timeLeft, setTimeLeft] = useState({ d: 0, h: 0, m: 0, s: 0 });
+  const [time, setTime] = useState({ h: 5, m: 47, s: 22 });
 
   useEffect(() => {
-    const tick = () => {
-      const diff = deadline - Date.now();
-      if (diff <= 0) return;
-      const d = Math.floor(diff / 86400000);
-      const h = Math.floor((diff % 86400000) / 3600000);
-      const m = Math.floor((diff % 3600000) / 60000);
-      const s = Math.floor((diff % 60000) / 1000);
-      setTimeLeft({ d, h, m, s });
-    };
-    tick();
-    const id = setInterval(tick, 1000);
-    return () => clearInterval(id);
+    const t = setInterval(() => {
+      setTime((prev) => {
+        let { h, m, s } = prev;
+        s--; if (s < 0) { s = 59; m--; } if (m < 0) { m = 59; h--; } if (h < 0) { h = 23; }
+        return { h, m, s };
+      });
+    }, 1000);
+    return () => clearInterval(t);
   }, []);
 
   const pad = (n: number) => String(n).padStart(2, '0');
 
   return (
-    <section className="hh-section">
+    <section className="ms-section">
       <div className="container">
-        <div className="hh-seasonal-banner">
-          <div className="hh-seasonal-tag">🌸 Spring Harvest Sale</div>
-          <h2 style={{ fontFamily: 'Rajdhani, sans-serif', fontSize: 'clamp(2rem, 4vw, 3.5rem)', fontWeight: 800, color: '#fff', marginBottom: '0.5rem' }}>
-            Up to <span style={{ background: 'var(--hh-grad-primary)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text' }}>50% OFF</span> on<br />Seasonal Produce
-          </h2>
-          <p style={{ color: 'var(--hh-text-muted)', fontSize: '1rem', marginBottom: 0 }}>
-            Handpicked seasonal favourites straight from our farmers — only while stocks last!
-          </p>
-
-          <div className="hh-countdown">
-            {[
-              { val: pad(timeLeft.d), unit: 'Days' },
-              { val: pad(timeLeft.h), unit: 'Hours' },
-              { val: pad(timeLeft.m), unit: 'Mins' },
-              { val: pad(timeLeft.s), unit: 'Secs' },
-            ].map((item) => (
-              <div key={item.unit} className="hh-countdown-box">
-                <div className="hh-countdown-num">{item.val}</div>
-                <div className="hh-countdown-unit">{item.unit}</div>
-              </div>
-            ))}
+        <div className="ms-promo-banner">
+          <div style={{ position: 'relative', zIndex: 2 }}>
+            <div className="ms-promo-eyebrow">🔥 Flash Sale — Today Only</div>
+            <h2 className="ms-promo-title">
+              Farm Fresh Deals<br />Up to 40% OFF
+            </h2>
+            <p className="ms-promo-sub">
+              Limited-time offer on our most popular organic produce. Sourced fresh this morning — grab yours before it's gone!
+            </p>
+            <div className="ms-countdown">
+              {[
+                { val: pad(time.h), label: 'Hours' },
+                { val: pad(time.m), label: 'Mins' },
+                { val: pad(time.s), label: 'Secs' },
+              ].map((c) => (
+                <div key={c.label} className="ms-countdown-box">
+                  <div className="ms-countdown-num">{c.val}</div>
+                  <div className="ms-countdown-label">{c.label}</div>
+                </div>
+              ))}
+            </div>
+            <Link to="/products?sale=true" className="ms-btn-white">
+              Shop Sale <i className="bi bi-arrow-right" />
+            </Link>
           </div>
-
-          <Link to="/products?sale=true" className="hh-btn-primary" style={{ display: 'inline-flex' }}>
-            Grab the Deal <i className="bi bi-lightning-fill ms-2" />
-          </Link>
+          <div className="ms-promo-emojis" style={{ position: 'relative', zIndex: 2 }}>
+            {/* SVG mango */}
+            <svg width="72" height="72" viewBox="0 0 80 80" fill="none"><defs><radialGradient id="pb1" cx="35%" cy="30%" r="70%"><stop offset="0%" stopColor="#ffcc02"/><stop offset="100%" stopColor="#e65100"/></radialGradient></defs><path d="M32 70 C22 55 18 36 24 22 C30 8 50 8 56 22 C62 36 58 58 48 70 Z" fill="url(#pb1)"/><ellipse cx="28" cy="34" rx="10" ry="18" fill="rgba(255,255,255,0.15)"/><path d="M40 18 Q44 8 50 16" stroke="#f57f17" strokeWidth="2.5" fill="none" strokeLinecap="round"/></svg>
+            {/* SVG strawberry */}
+            <svg width="72" height="72" viewBox="0 0 80 80" fill="none"><defs><radialGradient id="pb2" cx="35%" cy="30%" r="70%"><stop offset="0%" stopColor="#ef9a9a"/><stop offset="100%" stopColor="#c62828"/></radialGradient></defs><path d="M40 72 C22 58 14 36 22 22 C30 8 50 8 58 22 C66 36 58 58 40 72Z" fill="url(#pb2)"/><circle cx="32" cy="30" r="8" fill="rgba(255,255,255,0.15)"/><path d="M32 20 C32 20 38 10 44 14 C40 18 34 22 32 20Z" fill="#66bb6a"/><path d="M48 16 C48 16 40 6 34 10 C38 14 44 18 48 16Z" fill="#4caf50"/><circle cx="34" cy="40" r="2" fill="rgba(255,255,255,0.3)"/><circle cx="44" cy="50" r="2" fill="rgba(255,255,255,0.3)"/><circle cx="40" cy="35" r="1.5" fill="rgba(255,255,255,0.25)"/></svg>
+            {/* SVG avocado */}
+            <svg width="72" height="72" viewBox="0 0 80 80" fill="none"><defs><radialGradient id="pb3" cx="35%" cy="30%" r="70%"><stop offset="0%" stopColor="#80cbc4"/><stop offset="100%" stopColor="#004d40"/></radialGradient></defs><ellipse cx="40" cy="44" rx="24" ry="32" fill="url(#pb3)"/><ellipse cx="40" cy="50" rx="14" ry="20" fill="#f9a825" opacity="0.75"/><circle cx="40" cy="55" r="10" fill="#5d4037" opacity="0.88"/><ellipse cx="32" cy="30" rx="9" ry="14" fill="rgba(255,255,255,0.15)"/></svg>
+          </div>
         </div>
       </div>
     </section>

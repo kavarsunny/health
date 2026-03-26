@@ -27,13 +27,15 @@ import SuperAdminDashboard from '../pages/superadmin/SuperAdminDashboard';
 
 const AppRoutes = () => (
   <Routes>
+    {/* ── Standalone Auth Pages ── */}
+    <Route path="/login"       element={<LoginPage />} />
+    <Route path="/register"    element={<RegisterPage />} />
+
     <Route element={<Layout />}>
       {/* ── Public ── */}
       <Route path="/"            element={<HomePage />} />
       <Route path="/products"    element={<ProductsPage />} />
       <Route path="/products/:id" element={<ProductDetailPage />} />
-      <Route path="/login"       element={<LoginPage />} />
-      <Route path="/register"    element={<RegisterPage />} />
 
       {/* ── Customer Protected ── */}
       <Route path="/cart"     element={<ProtectedRoute><CartPage /></ProtectedRoute>} />
