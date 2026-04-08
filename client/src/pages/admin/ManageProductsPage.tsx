@@ -6,7 +6,21 @@ import { createProduct, updateProduct, deleteProduct } from '../../api/product.a
 import { IProduct } from '../../types';
 
 const emptyForm = { name: '', description: '', price: 0, image: '', category: '', brand: '', stock: 0 };
-const CATEGORIES = ['vegetables', 'fruits', 'grains', 'dairy', 'herbs', 'oils', 'nuts', 'honey', 'superfoods'];
+const CATEGORIES = [
+  'Cereals & Grains',
+  'Pulses & Lentils',
+  'Flours (Atta)',
+  'Oils & Ghee',
+  'Natural Sweeteners',
+  'Spices',
+  'Dry Fruits & Nuts',
+  'Seeds',
+  'Healthy Snacks',
+  'Beverages',
+  'Ayurvedic & Herbal Products',
+  'Cow-Based Wellness Products',
+  'Eco-Friendly Products',
+];
 
 const ManageProductsPage = () => {
   const dispatch = useDispatch<AppDispatch>();

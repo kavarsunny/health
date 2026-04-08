@@ -5,7 +5,21 @@ import { AppDispatch, RootState } from '../store/store';
 import { fetchProducts } from '../store/slices/productSlice';
 import ProductCard from '../components/product/ProductCard';
 
-const CATEGORIES = ['vegetables', 'fruits', 'grains', 'dairy', 'herbs', 'oils', 'nuts', 'honey', 'superfoods'];
+const CATEGORIES = [
+  'Cereals & Grains',
+  'Pulses & Lentils',
+  'Flours (Atta)',
+  'Oils & Ghee',
+  'Natural Sweeteners',
+  'Spices',
+  'Dry Fruits & Nuts',
+  'Seeds',
+  'Healthy Snacks',
+  'Beverages',
+  'Ayurvedic & Herbal Products',
+  'Cow-Based Wellness Products',
+  'Eco-Friendly Products',
+];
 
 const ProductsPage = () => {
   const dispatch = useDispatch<AppDispatch>();

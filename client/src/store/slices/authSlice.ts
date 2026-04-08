@@ -17,8 +17,9 @@ export const register = createAsyncThunk(
   async ({ name, email, password }: { name: string; email: string; password: string }, { rejectWithValue }) => {
     try {
       const res = await authAPI.registerUser(name, email, password);
-      localStorage.setItem('user', JSON.stringify(res.data));
-      return res.data;
+      const user = res.data;
+      localStorage.setItem('user', JSON.stringify(user));
+      return user;
     } catch (err: any) {
       return rejectWithValue(err.response?.data?.message || 'Registration failed');
     }
@@ -30,8 +31,9 @@ export const login = createAsyncThunk(
   async ({ email, password }: { email: string; password: string }, { rejectWithValue }) => {
     try {
       const res = await authAPI.loginUser(email, password);
-      localStorage.setItem('user', JSON.stringify(res.data));
-      return res.data;
+      const user = res.data; // authAPI.loginUser returns ApiResponse<IUser>, so .data is IUser
+      localStorage.setItem('user', JSON.stringify(user));
+      return user;
     } catch (err: any) {
       return rejectWithValue(err.response?.data?.message || 'Login failed');
     }

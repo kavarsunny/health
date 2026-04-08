@@ -5,6 +5,8 @@ export interface IUser {
   email: string;
   role: 'user' | 'admin' | 'farmer' | 'superadmin';
   token: string;
+  createdAt?: string;
+  updatedAt?: string;
 }
 
 export interface AuthState {

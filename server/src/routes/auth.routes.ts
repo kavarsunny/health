@@ -1,7 +1,7 @@
 import { Router } from 'express';
 import { body } from 'express-validator';
 import * as authController from '../controllers/auth.controller';
-import { protect } from '../middleware/auth.middleware';
+import { protect, admin } from '../middleware/auth.middleware';
 import { validate } from '../middleware/validate.middleware';
 
 const router = Router();
@@ -26,5 +26,11 @@ router.post(
 );
 
 router.get('/profile', protect as any, authController.getProfile as any);
+
+// Admin Routes
+router.get('/users', protect as any, admin as any, authController.getAllUsers as any);
+router.get('/farmers', protect as any, admin as any, authController.getAllFarmers as any);
+router.patch('/users/:id/role', protect as any, admin as any, authController.updateUserRole as any);
+router.delete('/users/:id', protect as any, admin as any, authController.deleteUser as any);
 
 export default router;

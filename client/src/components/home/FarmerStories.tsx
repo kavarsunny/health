@@ -1,7 +1,7 @@
+import { useState, useEffect } from 'react';
+
 const farmers = [
   {
-    initials: 'RP',
-    avatarColor: '#e8f5e9', iconColor: '#336939',
     name: 'Ramu Patil',
     location: 'Nashik, Maharashtra',
     bio: 'Third-generation farmer growing premium grapes and tomatoes using natural farming methods passed down through his family.',
@@ -9,8 +9,6 @@ const farmers = [
     products: '350+ kg weekly',
   },
   {
-    initials: 'KR',
-    avatarColor: '#e3f2fd', iconColor: '#1565c0',
     name: 'Kavitha Reddy',
     location: 'Kurnool, Andhra Pradesh',
     bio: 'Former software engineer turned organic farmer, Kavitha grows heirloom vegetables and has inspired 20+ local farmers to go organic.',
@@ -18,8 +16,6 @@ const farmers = [
     products: '200+ kg weekly',
   },
   {
-    initials: 'SC',
-    avatarColor: '#fff8e1', iconColor: '#e65100',
     name: 'Suresh Choudhary',
     location: 'Sikar, Rajasthan',
     bio: 'Specializing in cold-pressed mustard oil and traditional rajasthani spices, Suresh uses desert-adapted organic techniques.',
@@ -28,36 +24,84 @@ const farmers = [
   },
 ];
 
-const FarmerStories = () => (
-  <section className="ms-section">
-    <div className="container">
-      <div className="ms-section-header">
-        <div className="ms-section-eyebrow">Our Farmers</div>
-        <h2 className="ms-section-title">Meet the People Behind Your Food</h2>
-        <p className="ms-section-sub">
-          Every product you buy directly supports these verified, passionate farmers who grow with care and integrity.
-        </p>
-      </div>
-      <div className="row g-4">
-        {farmers.map((f) => (
-          <div key={f.name} className="col-md-4">
-            <div className="ms-farmer-card">
-              <div className="ms-farmer-img-wrap" style={{ background: f.avatarColor, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 8 }}>
-                <div style={{ width: 72, height: 72, borderRadius: '50%', background: f.iconColor, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '1.6rem', fontWeight: 800, color: '#fff', boxShadow: `0 4px 16px ${f.iconColor}44` }}>{f.initials}</div>
-                <div style={{ fontSize: '0.75rem', fontWeight: 700, color: f.iconColor, textTransform: 'uppercase', letterSpacing: 1 }}><i className="bi bi-patch-check-fill" style={{ marginRight: 4 }} />Verified</div>
+const FarmerStories = () => {
+  const [current, setCurrent] = useState(0);
+
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setCurrent((prev) => (prev + 1) % farmers.length);
+    }, 5000);
+    return () => clearInterval(timer);
+  }, []);
+
+  return (
+    <section className="ms-section py-5">
+      <div className="container">
+        <div className="ms-section-header text-center mb-5">
+          <div className="ms-section-eyebrow">Our Farmers</div>
+          <h2 className="ms-section-title">People Behind Your Food</h2>
+        </div>
+
+        <div className="ms-story-swapper" style={{ minHeight: '300px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+          <div 
+            key={current} 
+            className="ms-story-item text-center" 
+            style={{ maxWidth: '850px', animation: 'fadeIn 0.8s ease-out' }}
+          >
+            <i className="bi bi-quote" style={{ fontSize: '3.5rem', color: 'var(--ms-primary)', opacity: 0.15, display: 'block', marginBottom: '-20px' }} />
+            
+            <p className="ms-farmer-bio mx-auto mb-4" style={{ 
+              fontSize: '1.4rem', 
+              fontWeight: 500, 
+              lineHeight: 1.6, 
+              color: 'var(--ms-heading)',
+              fontStyle: 'italic',
+              maxWidth: '750px'
+            }}>
+              "{farmers[current].bio}"
+            </p>
+
+            <div className="ms-farmer-info mt-4">
+              <div className="ms-farmer-name" style={{ fontSize: '1.2rem', fontWeight: 800 }}>{farmers[current].name}</div>
+              <div className="ms-farmer-location text-muted small mt-1">
+                <i className="bi bi-geo-alt-fill me-1" style={{ color: '#ef4444' }} />
+                {farmers[current].location} • {farmers[current].products}
               </div>
-              <div className="ms-farmer-body">
-                <div className="ms-farmer-name">{f.name}</div>
-                <div className="ms-farmer-location"><i className="bi bi-geo-alt-fill" style={{ color: '#e53935', marginRight: 4 }} />{f.location} · {f.products}</div>
-                <p className="ms-farmer-bio">{f.bio}</p>
-                <span className="ms-farmer-tag">{f.tag}</span>
+              <div className="mt-3">
+                <span className="ms-farmer-tag" style={{ 
+                  background: 'var(--ms-bg-alt)', 
+                  color: 'var(--ms-primary)', 
+                  padding: '4px 12px', 
+                  borderRadius: '20px', 
+                  fontSize: '0.8rem', 
+                  fontWeight: 700 
+                }}>
+                  {farmers[current].tag}
+                </span>
               </div>
             </div>
           </div>
-        ))}
+        </div>
+
+        <div className="d-flex justify-content-center gap-2 mt-5">
+          {farmers.map((_, i) => (
+            <button
+              key={i}
+              onClick={() => setCurrent(i)}
+              style={{
+                width: i === current ? '30px' : '10px',
+                height: '10px',
+                borderRadius: '5px',
+                background: i === current ? 'var(--ms-primary)' : 'var(--ms-border-dark)',
+                border: 'none',
+                transition: 'all 0.3s'
+              }}
+            />
+          ))}
+        </div>
       </div>
-    </div>
-  </section>
-);
+    </section>
+  );
+};
 
 export default FarmerStories;

@@ -20,3 +20,25 @@ export const getProfile = asyncHandler(async (req: AuthRequest, res: Response) =
   const data = await authService.getUserProfile(req.user!._id as string);
   res.json(new ApiResponse(true, 'Profile retrieved', data));
 });
+export const getAllUsers = asyncHandler(async (req: AuthRequest, res: Response) => {
+  const data = await authService.getAllUsers();
+  res.json(new ApiResponse(true, 'Users retrieved', data));
+});
+
+export const getAllFarmers = asyncHandler(async (req: AuthRequest, res: Response) => {
+  const data = await authService.getAllFarmers();
+  res.json(new ApiResponse(true, 'Farmers retrieved', data));
+});
+
+export const updateUserRole = asyncHandler(async (req: AuthRequest, res: Response) => {
+  const { id } = req.params;
+  const { role } = req.body;
+  const data = await authService.updateUserRole(id as string, role);
+  res.json(new ApiResponse(true, 'User role updated', data));
+});
+
+export const deleteUser = asyncHandler(async (req: AuthRequest, res: Response) => {
+  const { id } = req.params;
+  await authService.deleteUser(id as string);
+  res.json(new ApiResponse(true, 'User deleted successfully', null));
+});

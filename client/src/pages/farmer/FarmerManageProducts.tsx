@@ -48,7 +48,21 @@ const emptyForm = {
 type FormData = typeof emptyForm;
 
 /* ─── Categories ─── */
-const CATEGORIES = ['Vegetables','Fruits','Grains','Oils','Herbs','Dairy','Honey','Pickles','Other'];
+const CATEGORIES = [
+  'Cereals & Grains',
+  'Pulses & Lentils',
+  'Flours (Atta)',
+  'Oils & Ghee',
+  'Natural Sweeteners',
+  'Spices',
+  'Dry Fruits & Nuts',
+  'Seeds',
+  'Healthy Snacks',
+  'Beverages',
+  'Ayurvedic & Herbal Products',
+  'Cow-Based Wellness Products',
+  'Eco-Friendly Products',
+];
 
 /* ─── Main Page ─── */
 const FarmerManageProducts = () => {

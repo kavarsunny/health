@@ -81,17 +81,23 @@ const ProductCard = ({ product }: ProductCardProps) => {
         </div>
       </div>
 
-      <div className="ms-product-footer">
+      <div className="ms-product-footer d-flex justify-content-between align-items-center mt-3">
+        <div className="ms-product-price-col">
+          <div className="ms-product-price" style={{ fontSize: '1.25rem', fontWeight: 800, color: 'var(--ms-text)' }}>₹{product.price}</div>
+          {mrp && mrp > product.price && (
+            <div className="ms-product-mrp-row d-flex align-items-center gap-2">
+               <span className="ms-product-mrp text-decoration-line-through text-muted small">₹{mrp}</span>
+               <span className="ms-product-discount-badge">{discount}% OFF</span>
+            </div>
+          )}
+        </div>
         <button
-          className="ms-add-cart-btn"
+          className="ms-pill-btn-sm"
           onClick={handleAddToCart}
           disabled={product.stock === 0}
+          style={{ padding: '6px 16px', fontSize: '0.8rem' }}
         >
-          {product.stock === 0 ? (
-            'Out of Stock'
-          ) : (
-            <><i className="bi bi-cart-plus" /> Add to Cart</>
-          )}
+          {product.stock === 0 ? 'Out' : 'Add +'}
         </button>
       </div>
     </div>

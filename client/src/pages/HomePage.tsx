@@ -9,12 +9,12 @@ import MarqueeStrip from '../components/layout/MarqueeStrip';
 import HeroSection from '../components/home/HeroSection';
 import QuickCategories from '../components/home/QuickCategories';
 import CategoryGrid from '../components/home/CategoryGrid';
-import SeasonalBanner from '../components/home/SeasonalBanner';
 import FarmerStories from '../components/home/FarmerStories';
 import BlogSection from '../components/home/BlogSection';
 import TrustBadges from '../components/home/TrustBadges';
-import TestimonialsNewsletter from '../components/home/TestimonialsNewsletter';
 import ProductCard from '../components/product/ProductCard';
+import StoreGrid from '../components/home/StoreGrid';
+import FlashDeals from '../components/home/FlashDeals';
 
 const HomePage = () => {
   const dispatch = useDispatch<AppDispatch>();
@@ -31,6 +31,7 @@ const HomePage = () => {
       <MarqueeStrip />
       <QuickCategories />
       <TrustBadges />
+      <FlashDeals />
 
       {/* Featured Products */}
       <section className="ms-section">
@@ -64,10 +65,9 @@ const HomePage = () => {
       </section>
 
       <CategoryGrid />
-      <SeasonalBanner />
+      <StoreGrid />
       <FarmerStories />
       <BlogSection />
-      <TestimonialsNewsletter />
     </>
   );
 };

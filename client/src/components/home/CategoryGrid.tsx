@@ -1,15 +1,84 @@
 import { Link } from 'react-router-dom';
 
 const categories = [
-  { image: 'https://images.unsplash.com/photo-1566385101042-1a0aa0c1268c?auto=format&fit=crop&w=400&q=80', name: 'Vegetables', count: '120+ items', to: '/products?category=vegetables' },
-  { image: 'https://images.unsplash.com/photo-1610832958506-aa56368176cf?auto=format&fit=crop&w=400&q=80', name: 'Fruits', count: '80+ items', to: '/products?category=fruits' },
-  { image: 'https://images.unsplash.com/photo-1574323347407-f5e1ad6d020b?auto=format&fit=crop&w=400&q=80', name: 'Grains & Cereals', count: '60+ items', to: '/products?category=grains' },
-  { image: 'https://images.unsplash.com/photo-1550583724-b2692b85b150?auto=format&fit=crop&w=400&q=80', name: 'Dairy & Eggs', count: '45+ items', to: '/products?category=dairy' },
-  { image: 'https://images.unsplash.com/photo-1596040033229-a9821ebd058d?auto=format&fit=crop&w=400&q=80', name: 'Herbs & Spices', count: '90+ items', to: '/products?category=herbs' },
-  { image: 'https://images.unsplash.com/photo-1474979266404-7eaacbcd87c5?auto=format&fit=crop&w=400&q=80', name: 'Cold Pressed Oils', count: '30+ items', to: '/products?category=oils' },
-  { image: 'https://images.unsplash.com/photo-1508061253366-f7da158b6d46?auto=format&fit=crop&w=400&q=80', name: 'Dry Fruits & Nuts', count: '50+ items', to: '/products?category=nuts' },
-  { image: 'https://images.unsplash.com/photo-1587049352851-8d4e89134fc2?auto=format&fit=crop&w=400&q=80', name: 'Honey & Sweeteners', count: '25+ items', to: '/products?category=honey' },
-  { image: 'https://images.unsplash.com/photo-1490645935967-10de6ba17061?auto=format&fit=crop&w=400&q=80', name: 'Superfoods', count: '35+ items', to: '/products?category=superfoods' },
+  {
+    image: 'https://images.unsplash.com/photo-1574323347407-f5e1ad6d020b?auto=format&fit=crop&w=400&q=80',
+    name: 'Cereals & Grains',
+    count: '10 products',
+    to: '/products?category=Cereals+%26+Grains',
+  },
+  {
+    image: 'https://images.unsplash.com/photo-1585032226651-759b368d7246?auto=format&fit=crop&w=400&q=80',
+    name: 'Pulses & Lentils',
+    count: '9 products',
+    to: '/products?category=Pulses+%26+Lentils',
+  },
+  {
+    image: 'https://images.unsplash.com/photo-1509440159596-0249088772ff?auto=format&fit=crop&w=400&q=80',
+    name: 'Flours (Atta)',
+    count: '5 products',
+    to: '/products?category=Flours+(Atta)',
+  },
+  {
+    image: 'https://images.unsplash.com/photo-1474979266404-7eaacbcd87c5?auto=format&fit=crop&w=400&q=80',
+    name: 'Oils & Ghee',
+    count: '5 products',
+    to: '/products?category=Oils+%26+Ghee',
+  },
+  {
+    image: 'https://images.unsplash.com/photo-1587049352851-8d4e89134fc2?auto=format&fit=crop&w=400&q=80',
+    name: 'Natural Sweeteners',
+    count: '5 products',
+    to: '/products?category=Natural+Sweeteners',
+  },
+  {
+    image: 'https://images.unsplash.com/photo-1596040033229-a9821ebd058d?auto=format&fit=crop&w=400&q=80',
+    name: 'Spices',
+    count: '6 products',
+    to: '/products?category=Spices',
+  },
+  {
+    image: 'https://images.unsplash.com/photo-1508061253366-f7da158b6d46?auto=format&fit=crop&w=400&q=80',
+    name: 'Dry Fruits & Nuts',
+    count: '5 products',
+    to: '/products?category=Dry+Fruits+%26+Nuts',
+  },
+  {
+    image: 'https://images.unsplash.com/photo-1615485290382-441e4d049cb5?auto=format&fit=crop&w=400&q=80',
+    name: 'Seeds',
+    count: '5 products',
+    to: '/products?category=Seeds',
+  },
+  {
+    image: 'https://images.unsplash.com/photo-1621193793262-4127d9855c91?auto=format&fit=crop&w=400&q=80',
+    name: 'Healthy Snacks',
+    count: '5 products',
+    to: '/products?category=Healthy+Snacks',
+  },
+  {
+    image: 'https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?auto=format&fit=crop&w=400&q=80',
+    name: 'Beverages',
+    count: '5 products',
+    to: '/products?category=Beverages',
+  },
+  {
+    image: 'https://images.unsplash.com/photo-1615485296573-0b9e4f4f9b01?auto=format&fit=crop&w=400&q=80',
+    name: 'Ayurvedic & Herbal',
+    count: '8 products',
+    to: '/products?category=Ayurvedic+%26+Herbal+Products',
+  },
+  {
+    image: 'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?auto=format&fit=crop&w=400&q=80',
+    name: 'Cow-Based Wellness',
+    count: '5 products',
+    to: '/products?category=Cow-Based+Wellness+Products',
+  },
+  {
+    image: 'https://images.unsplash.com/photo-1542838132-92c53300491e?auto=format&fit=crop&w=400&q=80',
+    name: 'Eco-Friendly Products',
+    count: '5 products',
+    to: '/products?category=Eco-Friendly+Products',
+  },
 ];
 
 const CategoryGrid = () => (
@@ -19,7 +88,7 @@ const CategoryGrid = () => (
         <div className="ms-section-eyebrow">Browse</div>
         <h2 className="ms-section-title">Shop by Category</h2>
         <p className="ms-section-sub">
-          Explore our wide range of certified organic products, sourced directly from trusted Indian farmers.
+          Explore our wide range of natural, organic & eco-friendly products sourced directly from trusted Indian farmers.
         </p>
       </div>
       
@@ -57,18 +126,15 @@ const CategoryGrid = () => (
         }
       `}</style>
 
-      <div className="row g-4">
+      <div className="row g-4 justify-content-center">
         {categories.map((cat) => (
-          <div key={cat.name} className="col-6 col-md-4 col-lg-4">
+          <div key={cat.name} className="col-6 col-md-4 col-xl-2">
             <Link to={cat.to} style={{ textDecoration: 'none' }}>
-              <div className="ms-photo-card">
-                <div className="ms-photo-img-wrap">
-                  <img src={cat.image} alt={cat.name} className="ms-photo-img" loading="lazy" />
+              <div className="ms-qc-item" style={{ minWidth: 'unset' }}>
+                <div className="ms-qc-circle shadow-sm" style={{ width: '120px', height: '120px' }}>
+                  <img src={cat.image} alt={cat.name} loading="lazy" />
                 </div>
-                <div style={{ padding: '1.4rem', textAlign: 'center', flex: 1, display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
-                  <div style={{ color: 'var(--ms-text)', fontWeight: 700, fontSize: '1.2rem', marginBottom: '4px' }}>{cat.name}</div>
-                  <div style={{ color: 'var(--ms-primary)', fontSize: '0.85rem', fontWeight: 600 }}>{cat.count}</div>
-                </div>
+                <div className="ms-qc-label text-center mt-2 fw-bold" style={{ fontSize: '0.9rem' }}>{cat.name}</div>
               </div>
             </Link>
           </div>
