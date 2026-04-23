@@ -4,90 +4,60 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.clearCart = exports.removeFromCart = exports.addToCart = exports.getCart = void 0;
-const db_1 = __importDefault(require("../config/db"));
+const Cart_1 = __importDefault(require("../models/Cart"));
+const Product_1 = __importDefault(require("../models/Product"));
 const ApiError_1 = require("../utils/ApiError");
 const getCart = async (userId) => {
-    let cart = await db_1.default.cart.findUnique({
-        where: { userId },
-        include: { items: { include: { product: true } } }
-    });
+    let cart = await Cart_1.default.findOne({ user: userId }).populate('items.product');
     if (!cart) {
-        cart = await db_1.default.cart.create({
-            data: { userId },
-            include: { items: { include: { product: true } } }
-        });
+        cart = await Cart_1.default.create({ user: userId, items: [], totalPrice: 0 });
     }
-    return { ...cart, _id: cart.id };
+    return { ...cart.toObject(), _id: cart._id };
 };
 exports.getCart = getCart;
 const addToCart = async (userId, productId, quantity) => {
-    const product = await db_1.default.product.findUnique({ where: { id: productId } });
+    const product = await Product_1.default.findById(productId);
     if (!product)
         throw new ApiError_1.ApiError(404, 'Product not found');
     if (product.stock < quantity)
         throw new ApiError_1.ApiError(400, 'Insufficient stock');
-    let cart = await db_1.default.cart.findUnique({ where: { userId }, include: { items: true } });
+    let cart = await Cart_1.default.findOne({ user: userId });
     if (!cart) {
-        cart = await db_1.default.cart.create({ data: { userId }, include: { items: true } });
+        cart = await Cart_1.default.create({ user: userId, items: [], totalPrice: 0 });
     }
-    const existingItem = await db_1.default.cartItem.findUnique({
-        where: { cartId_productId: { cartId: cart.id, productId } }
-    });
-    if (existingItem) {
-        await db_1.default.cartItem.update({
-            where: { id: existingItem.id },
-            data: { quantity, price: product.price }
-        });
+    const existingIdx = cart.items.findIndex((i) => i.product.toString() === productId);
+    if (existingIdx > -1) {
+        cart.items[existingIdx].quantity = quantity;
+        cart.items[existingIdx].price = product.price;
     }
     else {
-        await db_1.default.cartItem.create({
-            data: { cartId: cart.id, productId, quantity, price: product.price }
-        });
+        cart.items.push({ product: productId, quantity, price: product.price });
     }
-    // Recalculate total
-    const updatedCart = await db_1.default.cart.findUnique({
-        where: { id: cart.id },
-        include: { items: true }
-    });
-    const totalPrice = updatedCart.items.reduce((sum, item) => sum + (item.price * item.quantity), 0);
-    const finalCart = await db_1.default.cart.update({
-        where: { id: cart.id },
-        data: { totalPrice },
-        include: { items: { include: { product: true } } }
-    });
-    return { ...finalCart, _id: finalCart.id };
+    cart.totalPrice = cart.items.reduce((sum, i) => sum + i.price * i.quantity, 0);
+    await cart.save();
+    const populated = await Cart_1.default.findById(cart._id).populate('items.product');
+    return { ...populated.toObject(), _id: populated._id };
 };
 exports.addToCart = addToCart;
 const removeFromCart = async (userId, productId) => {
-    const cart = await db_1.default.cart.findUnique({ where: { userId } });
+    const cart = await Cart_1.default.findOne({ user: userId });
     if (!cart)
         throw new ApiError_1.ApiError(404, 'Cart not found');
-    await db_1.default.cartItem.deleteMany({
-        where: { cartId: cart.id, productId }
-    });
-    // Recalculate total
-    const updatedCart = await db_1.default.cart.findUnique({ where: { id: cart.id }, include: { items: true } });
-    const totalPrice = updatedCart.items.reduce((sum, item) => sum + (item.price * item.quantity), 0);
-    const finalCart = await db_1.default.cart.update({
-        where: { id: cart.id },
-        data: { totalPrice },
-        include: { items: { include: { product: true } } }
-    });
-    return { ...finalCart, _id: finalCart.id };
+    cart.items = cart.items.filter((i) => i.product.toString() !== productId);
+    cart.totalPrice = cart.items.reduce((sum, i) => sum + i.price * i.quantity, 0);
+    await cart.save();
+    const populated = await Cart_1.default.findById(cart._id).populate('items.product');
+    return { ...populated.toObject(), _id: populated._id };
 };
 exports.removeFromCart = removeFromCart;
 const clearCart = async (userId) => {
-    const cart = await db_1.default.cart.findUnique({ where: { userId } });
-    if (cart) {
-        await db_1.default.cartItem.deleteMany({ where: { cartId: cart.id } });
-        const finalCart = await db_1.default.cart.update({
-            where: { id: cart.id },
-            data: { totalPrice: 0 },
-            include: { items: { include: { product: true } } }
-        });
-        return { ...finalCart, _id: finalCart.id };
-    }
-    return null;
+    const cart = await Cart_1.default.findOne({ user: userId });
+    if (!cart)
+        return null;
+    cart.items = [];
+    cart.totalPrice = 0;
+    await cart.save();
+    return { ...cart.toObject(), _id: cart._id };
 };
 exports.clearCart = clearCart;
 //# sourceMappingURL=cart.service.js.map

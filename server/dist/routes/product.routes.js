@@ -36,11 +36,22 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = require("express");
 const productController = __importStar(require("../controllers/product.controller"));
 const auth_middleware_1 = require("../middleware/auth.middleware");
+const farmerOrAdmin = (req, res, next) => {
+    const role = req.user?.role;
+    if (role === 'farmer' || role === 'admin' || role === 'superadmin') {
+        next();
+    }
+    else {
+        res.status(403).json({ success: false, message: 'Not authorized' });
+    }
+};
 const router = (0, express_1.Router)();
 router.get('/', productController.getProducts);
 router.get('/:id', productController.getProduct);
-router.post('/', auth_middleware_1.protect, auth_middleware_1.admin, productController.createProduct);
-router.put('/:id', auth_middleware_1.protect, auth_middleware_1.admin, productController.updateProduct);
-router.delete('/:id', auth_middleware_1.protect, auth_middleware_1.admin, productController.deleteProduct);
+// Farmers can create/update/delete their own products; admins can do anything
+router.post('/', auth_middleware_1.protect, farmerOrAdmin, productController.createProduct);
+router.put('/:id', auth_middleware_1.protect, farmerOrAdmin, productController.updateProduct);
+router.patch('/:id/approve', auth_middleware_1.protect, auth_middleware_1.admin, productController.approveProduct);
+router.delete('/:id', auth_middleware_1.protect, farmerOrAdmin, productController.deleteProduct);
 exports.default = router;
 //# sourceMappingURL=product.routes.js.map

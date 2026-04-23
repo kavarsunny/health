@@ -23,6 +23,11 @@ export const updateProduct = asyncHandler(async (req: Request, res: Response) =>
   res.json(new ApiResponse(true, 'Product updated', data));
 });
 
+export const approveProduct = asyncHandler(async (req: Request, res: Response) => {
+  const data = await productService.approveProduct(req.params.id as string);
+  res.json(new ApiResponse(true, 'Product approved successfully', data));
+});
+
 export const deleteProduct = asyncHandler(async (req: Request, res: Response) => {
   await productService.deleteProduct(req.params.id as string);
   res.json(new ApiResponse(true, 'Product deleted', null));

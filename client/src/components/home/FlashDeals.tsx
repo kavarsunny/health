@@ -63,7 +63,7 @@ const FlashDeals = () => {
                  <div className="ms-flash-card">
                    <Link to={`/products/${product._id}`} className="ms-flash-img-link">
                       <div className="ms-flash-img">
-                         <img src={product.image || 'https://via.placeholder.com/300?text=Fresh+Deal'} alt={product.name} />
+                         <img src={product.images && product.images.length > 0 ? product.images[0] : 'https://via.placeholder.com/300?text=Fresh+Deal'} alt={product.name} />
                          <div className="ms-flash-off">-{discount}%</div>
                       </div>
                    </Link>

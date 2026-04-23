@@ -5,11 +5,12 @@ import {
   AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, 
   PieChart, Pie, Cell 
 } from 'recharts';
+import { getAllUsers, getAllFarmers, updateUserRole, deleteUser } from '../../api/auth.api';
 import { logout } from '../../store/slices/authSlice';
 import { resetCart } from '../../store/slices/cartSlice';
 import { RootState } from '../../store/store';
 import type { AppDispatch } from '../../store/store';
-import { getAllUsers, getAllFarmers, updateUserRole, deleteUser } from '../../api/auth.api';
+import { getPendingFarmers, approveFarmer } from '../../api/auth.api';
 import { IUser } from '../../types';
 import Logo from '../../components/common/Logo';
 import { 
@@ -38,7 +39,7 @@ const navSections = [
   { label: 'Main', items: [{ icon: SVGDashboard, label: 'Overview', to: '/superadmin/dashboard' }] },
   { label: 'Management', items: [
     { icon: SVGUsers, label: 'All Users', to: '/superadmin/users' },
-    { icon: SVGFarmersIcon, label: 'Farmers', to: '/superadmin/farmers' },
+    { icon: SVGFarmersIcon, label: 'Approve Farmers', to: '/superadmin/farmers' },
     { icon: SVGInventory, label: 'Inventory', to: '/admin/products' },
     { icon: SVGOrders, label: 'Sales Orders', to: '/admin/orders' },
   ]},
@@ -207,6 +208,93 @@ const UserManagementTable = ({ title, type = 'all' }: { title: string; type?: 'a
   );
 };
 
+const FarmerApprovalTable = () => {
+  const [farmers, setFarmers] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [approvingId, setApprovingId] = useState<string | null>(null);
+
+  const loadData = async () => {
+    try {
+      setLoading(true);
+      const res = await getPendingFarmers();
+      if (res.success) setFarmers(res.data);
+    } catch (err) { console.error(err); } finally { setLoading(false); }
+  };
+
+  useEffect(() => { loadData(); }, []);
+
+  const handleApprove = async (id: string) => {
+    try {
+      setApprovingId(id);
+      const res = await approveFarmer(id);
+      if (res.success) setFarmers(farmers.filter(f => f.userId !== id));
+    } finally { setApprovingId(null); }
+  };
+
+  return (
+    <div className="ms-chart-card shadow-sm border-0">
+      <div className="ms-chart-header border-bottom p-3 d-flex justify-content-between align-items-center bg-white rounded-top">
+        <div>
+          <h5 className="mb-0 fw-bold">Pending Farmer Approvals</h5>
+          <p className="small text-muted mb-0">Review and approve farmer applications</p>
+        </div>
+        <button className="btn btn-outline-secondary btn-sm" onClick={loadData}>
+          ↻
+        </button>
+      </div>
+      <div className="table-responsive bg-white">
+        <table className="table table-hover align-middle mb-0">
+          <thead className="table-light">
+            <tr>
+              <th className="ps-3">Farmer Details</th>
+              <th>Type</th>
+              <th>Location</th>
+              <th>Submitted</th>
+              <th className="text-end pe-3">Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            {loading ? (
+              <tr><td colSpan={5} className="text-center py-5"><div className="spinner-border spinner-border-sm text-primary" /></td></tr>
+            ) : farmers.length === 0 ? (
+              <tr><td colSpan={5} className="text-center py-5 text-muted">No pending approvals</td></tr>
+            ) : farmers.map(f => (
+              <tr key={f.userId} style={{ opacity: approvingId === f.userId ? 0.5 : 1 }}>
+                <td className="ps-3">
+                  <div className="d-flex align-items-center gap-2">
+                    <div className="ms-tbl-avatar bg-info text-white">{f.user.name.charAt(0)}</div>
+                    <div>
+                      <div className="fw-bold truncate" style={{ maxWidth: '150px' }}>{f.user.name}</div>
+                      <div className="small text-muted truncate" style={{ maxWidth: '150px' }}>{f.user.phone}</div>
+                    </div>
+                  </div>
+                </td>
+                <td>
+                  <span className="badge bg-secondary">{f.farmerType}</span>
+                </td>
+                <td className="text-muted small">{f.district}, {f.state}</td>
+                <td className="text-muted small">{new Date(f.createdAt).toLocaleDateString()}</td>
+                <td className="text-end pe-3">
+                  <button 
+                    className="btn btn-success btn-sm me-2"
+                    onClick={() => handleApprove(f.userId)}
+                    disabled={approvingId === f.userId}
+                  >
+                    {approvingId === f.userId ? 'Approving...' : 'Approve'}
+                  </button>
+                  <button className="btn btn-outline-danger btn-sm">
+                    Reject
+                  </button>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  );
+};
+
 const SuperAdminDashboard = () => {
   const location = useLocation();
   const [stats, setStats] = useState({ users: 0, farmers: 0 });
@@ -320,7 +408,7 @@ const SuperAdminDashboard = () => {
 
   const renderContent = () => {
     if (location.pathname === '/superadmin/users') return <UserManagementTable title="User Directory" />;
-    if (location.pathname === '/superadmin/farmers') return <UserManagementTable title="Farmer Directory" type="farmers" />;
+    if (location.pathname === '/superadmin/farmers') return <FarmerApprovalTable />;
     return renderOverview();
   };
 

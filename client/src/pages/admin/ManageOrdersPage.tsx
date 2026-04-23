@@ -3,13 +3,14 @@ import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch, RootState } from '../../store/store';
 import { fetchAllOrders, changeOrderStatus } from '../../store/slices/orderSlice';
 
-const statuses = ['pending', 'processing', 'shipped', 'delivered', 'cancelled'];
+const statuses = ['pending', 'confirmed', 'packed', 'out_for_delivery', 'delivered', 'cancelled'];
 
 const statusPill = (s: string) => {
   const map: Record<string, string> = {
     pending: 'ms-pill ms-pill-yellow',
-    processing: 'ms-pill ms-pill-blue',
-    shipped: 'ms-pill ms-pill-blue',
+    confirmed: 'ms-pill ms-pill-blue',
+    packed: 'ms-pill ms-pill-blue',
+    out_for_delivery: 'ms-pill ms-pill-blue',
     delivered: 'ms-pill ms-pill-green',
     cancelled: 'ms-pill ms-pill-red',
   };
@@ -62,7 +63,9 @@ const ManageOrdersPage = () => {
           {[
             { label: 'Total Orders', val: allOrders.length, color: '#336939', icon: 'bi-cart-check-fill' },
             { label: 'Pending', val: allOrders.filter(o => o.status === 'pending').length, color: '#f59e0b', icon: 'bi-clock-fill' },
-            { label: 'In Transit', val: allOrders.filter(o => o.status === 'shipped').length, color: '#0ea5e9', icon: 'bi-truck' },
+            { label: 'Confirmed', val: allOrders.filter(o => o.status === 'confirmed').length, color: '#0ea5e9', icon: 'bi-check-circle' },
+            { label: 'Packed', val: allOrders.filter(o => o.status === 'packed').length, color: '#0ea5e9', icon: 'bi-box-seam' },
+            { label: 'Out for Delivery', val: allOrders.filter(o => o.status === 'out_for_delivery').length, color: '#0ea5e9', icon: 'bi-truck' },
             { label: 'Delivered', val: allOrders.filter(o => o.status === 'delivered').length, color: '#22c55e', icon: 'bi-check-circle-fill' },
           ].map((s) => (
             <div key={s.label} className="col-6 col-xl-3">

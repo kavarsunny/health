@@ -1,47 +1,78 @@
 /* ===== HealthyHaat – MyStore.in Inspired Professional Marketplace Theme ===== */
-@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Inter:wght@400;500;600&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;600&family=DM+Sans:wght@300;400;500;600&display=swap');
 
 :root {
-  /* MyStore.in Primary Palette */
-  --ms-primary:        #2b3d84; /* Deep Blue */
-  --ms-primary-light:  #3d52a0;
-  --ms-primary-dark:   #1a2a5a;
-  --ms-accent:         #fce7f3; /* Peach Accent */
-  --ms-gold:           #f59e0b; /* Amber/Gold */
-  --ms-red:            #ef4444; /* Error Red */
+  /* Healthify Haat Design System Tokens (v1.0) */
+  --hh-green-50: #F0F7F2;
+  --hh-green-100: #C8E6D0;
+  --hh-green-200: #90CCA0;
+  --hh-green-500: #2D6A4F;
+  --hh-green-600: #1E4D38;
+  --hh-green-700: #133326;
+  --hh-amber-50: #FEF8EE;
+  --hh-amber-100: #FDEBC8;
+  --hh-amber-400: #F4A535;
+  --hh-amber-600: #C07D18;
+  --hh-red-50: #FEF0EE;
+  --hh-red-400: #E5533C;
+  --hh-red-600: #B33B27;
+  --hh-sky-50: #EEF6FD;
+  --hh-sky-400: #3B96D8;
+  --hh-sky-600: #1E6EA8;
+  --hh-cream: #FAFAF7;
+  --hh-sand: #F2EEE8;
+  --hh-stone: #8A8579;
+  --hh-charcoal: #2C2A25;
+  --hh-border: rgba(44,42,37,0.12);
+  --hh-border-md: rgba(44,42,37,0.2);
+  --font-display: 'Playfair Display', Georgia, serif;
+  --font-body: 'DM Sans', system-ui, sans-serif;
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --radius-lg: 16px;
+  --radius-xl: 24px;
+  --radius-pill: 999px;
 
-  --ms-bg:             #ffffff; /* Clean White */
-  --ms-bg-alt:         #f8fafc; /* Slack/Slate light */
+  /* Legacy Fallbacks / Mappings */
+  --ms-primary:        var(--hh-green-500);
+  --ms-primary-light:  var(--hh-green-200);
+  --ms-primary-dark:   var(--hh-green-600);
+  --ms-accent:         var(--hh-green-50);
+  --ms-gold:           var(--hh-amber-400);
+  --ms-red:            var(--hh-red-400);
+
+  --ms-bg:             var(--hh-cream);
+  --ms-bg-alt:         var(--hh-sand);
   --ms-bg-card:        #ffffff;
-  --ms-border:         #e2e8f0;
-  --ms-border-dark:    #cbd5e1;
+  --ms-border:         var(--hh-border);
+  --ms-border-dark:    var(--hh-border-md);
 
-  --ms-text:           #1e293b; /* Slate 800 */
-  --ms-text-muted:     #64748b; /* Slate 500 */
-  --ms-text-light:     #94a3b8;
-  --ms-heading:        #0f172a; /* Slate 900 */
+  --ms-text:           var(--hh-charcoal);
+  --ms-text-muted:     var(--hh-stone);
+  --ms-text-light:     var(--hh-stone);
+  --ms-heading:        var(--hh-charcoal);
 
-  --ms-grad-primary:   linear-gradient(135deg, #2b3d84 0%, #3d52a0 100%);
-  --ms-grad-hero:      linear-gradient(135deg, #2b3d84 0%, #1a2a5a 100%);
+  --ms-grad-primary:   linear-gradient(135deg, var(--hh-green-500) 0%, var(--hh-green-200) 100%);
+  --ms-grad-hero:      linear-gradient(135deg, var(--hh-green-700) 0%, var(--hh-green-500) 100%);
   
-  --ms-shadow-sm:      0 1px 3px rgba(0,0,0,0.05);
-  --ms-shadow-md:      0 4px 12px rgba(43, 61, 132, 0.08);
-  --ms-shadow-lg:      0 12px 32px rgba(43, 61, 132, 0.12);
-  --ms-shadow-card:    0 2px 8px rgba(0, 0, 0, 0.04);
+  --ms-shadow-sm:      0 1px 4px rgba(0,0,0,0.06);
+  --ms-shadow-md:      0 4px 16px rgba(0,0,0,0.08);
+  --ms-shadow-lg:      0 8px 28px rgba(0,0,0,0.1);
+  --ms-shadow-card:    0 1px 4px rgba(0,0,0,0.06);
   --ms-transition:     all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 
-  --ms-radius-sm:      8px;
-  --ms-radius-md:      12px;
-  --ms-radius-lg:      20px;
-  --ms-radius-xl:      30px;
-  --ms-radius-pill:    100px; /* MyStore Pill Style */
+  --ms-radius-sm:      var(--radius-sm);
+  --ms-radius-md:      var(--radius-md);
+  --ms-radius-lg:      var(--radius-lg);
+  --ms-radius-xl:      var(--radius-xl);
+  --ms-radius-pill:    var(--radius-pill);
 }
 
 /* ===== Reset & Base ===== */
 *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
 html { scroll-behavior: smooth; }
 body {
-  font-family: 'Outfit', 'Inter', -apple-system, sans-serif;
+  font-family: var(--font-body);
   background-color: var(--ms-bg-alt);
   color: var(--ms-text);
   -webkit-font-smoothing: antialiased;
@@ -50,9 +81,9 @@ body {
   line-height: 1.6;
 }
 h1,h2,h3,h4,h5,h6 {
-  font-family: 'Outfit', sans-serif;
+  font-family: var(--font-display);
   color: var(--ms-heading);
-  font-weight: 700;
+  font-weight: 600;
   line-height: 1.2;
 }
 a { text-decoration: none; color: inherit; transition: var(--ms-transition); }
@@ -116,7 +147,7 @@ button { font-family: inherit; }
   border-bottom: 1px solid #f1f5f9;
 }
 .ms-navbar-v3.scrolled {
-  box-shadow: 0 8px 24px rgba(43, 61, 132, 0.08);
+  box-shadow: 0 8px 24px rgba(51, 105, 57, 0.08);
 }
 
 .ms-nav-top-bar {
@@ -183,7 +214,7 @@ button { font-family: inherit; }
 .ms-nav-search-bar:focus-within {
   border-color: var(--ms-primary);
   background: #fff;
-  box-shadow: 0 0 0 4px rgba(43, 61, 132, 0.08);
+  box-shadow: 0 0 0 4px rgba(51, 105, 57, 0.08);
 }
 .ms-nav-search-cat {
   padding-left: 12px;
@@ -240,7 +271,7 @@ button { font-family: inherit; }
   .ms-nav-inner-v3 { gap: 0.5rem; }
   .ms-nav-actions-v3 { gap: 0.5rem; }
 }
-.ms-nav-icon-link:hover .ms-nav-icon-circle { background: #eff6ff; color: var(--ms-primary); }
+.ms-nav-icon-link:hover .ms-nav-icon-circle { background: var(--ms-accent); color: var(--ms-primary); }
 .ms-icon-badge {
   position: absolute; top: 0; right: 0;
   background: var(--ms-primary); color: #fff;
@@ -264,7 +295,7 @@ button { font-family: inherit; }
   transition: all 0.2s;
 }
 .ms-dropdown-item:hover { background: #f8fafc; color: var(--ms-primary); padding-left: 24px; }
-.ms-dropdown-item.highlight { color: var(--ms-primary); background: #eff6ff; }
+.ms-dropdown-item.highlight { color: var(--ms-primary); background: var(--ms-accent); }
 
 /* Mobile Drawer */
 .ms-mobile-drawer {
@@ -1364,7 +1395,7 @@ button { font-family: inherit; }
   cursor: pointer; border: 1px solid transparent;
   transition: var(--ms-transition);
 }
-.ms-tbl-btn-edit { background:#eff6ff; color:#1d4ed8; border-color:#dbeafe; }
+.ms-tbl-btn-edit { background: var(--ms-accent); color: #1d4ed8; border-color: #dbeafe; }
 .ms-tbl-btn-edit:hover { background:#dbeafe; }
 .ms-tbl-btn-del  { background:#fff5f5; color:#dc2626; border-color:#fecaca; }
 .ms-tbl-btn-del:hover  { background:#fee2e2; }

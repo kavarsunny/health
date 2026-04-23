@@ -44,7 +44,7 @@ const ProductDetailPage = () => {
       </Button>
       <Row className="g-4">
         <Col md={5}>
-          <Image src={product.image} alt={product.name} fluid rounded className="shadow" />
+          <Image src={product.images && product.images.length > 0 ? product.images[0] : '/placeholder.jpg'} alt={product.name} fluid rounded className="shadow" />
         </Col>
         <Col md={7}>
           <Badge bg="secondary" className="mb-2 text-uppercase">{product.category}</Badge>

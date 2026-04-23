@@ -26,15 +26,18 @@ export interface IReview {
 
 export interface IProduct {
   _id: string;
+  farmerId: string;
   name: string;
   description: string;
   price: number;
-  image: string;
+  images: string[];
+  unit: string;
   category: string;
-  brand: string;
+  brand?: string;
   stock: number;
   rating: number;
   numReviews: number;
+  status: string;
   reviews: IReview[];
   createdAt: string;
   updatedAt: string;
@@ -101,7 +104,7 @@ export interface IOrder {
   paidAt?: string;
   isDelivered: boolean;
   deliveredAt?: string;
-  status: 'pending' | 'processing' | 'shipped' | 'delivered' | 'cancelled';
+  status: 'pending' | 'confirmed' | 'packed' | 'out_for_delivery' | 'delivered' | 'cancelled';
   createdAt: string;
   updatedAt: string;
 }

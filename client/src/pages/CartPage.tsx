@@ -31,7 +31,7 @@ const CartPage = () => {
                 <ListGroup.Item key={typeof item.product === 'string' ? item.product : item.product._id} className="py-3">
                   <Row className="align-items-center">
                     <Col xs={2}>
-                      <Image src={typeof item.product === 'string' ? '/placeholder.jpg' : item.product.image} alt="product" fluid rounded />
+                      <Image src={typeof item.product === 'string' ? '/placeholder.jpg' : (item.product.images && item.product.images.length > 0 ? item.product.images[0] : '/placeholder.jpg')} alt="product" fluid rounded />
                     </Col>
                     <Col xs={3}>
                       <span className="fw-semibold">

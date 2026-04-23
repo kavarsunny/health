@@ -33,7 +33,7 @@ var __importStar = (this && this.__importStar) || (function () {
     };
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.deleteProduct = exports.updateProduct = exports.createProduct = exports.getProduct = exports.getProducts = void 0;
+exports.deleteProduct = exports.approveProduct = exports.updateProduct = exports.createProduct = exports.getProduct = exports.getProducts = void 0;
 const asyncHandler_1 = require("../utils/asyncHandler");
 const ApiResponse_1 = require("../utils/ApiResponse");
 const productService = __importStar(require("../services/product.service"));
@@ -52,6 +52,10 @@ exports.createProduct = (0, asyncHandler_1.asyncHandler)(async (req, res) => {
 exports.updateProduct = (0, asyncHandler_1.asyncHandler)(async (req, res) => {
     const data = await productService.updateProduct(req.params.id, req.body);
     res.json(new ApiResponse_1.ApiResponse(true, 'Product updated', data));
+});
+exports.approveProduct = (0, asyncHandler_1.asyncHandler)(async (req, res) => {
+    const data = await productService.approveProduct(req.params.id);
+    res.json(new ApiResponse_1.ApiResponse(true, 'Product approved successfully', data));
 });
 exports.deleteProduct = (0, asyncHandler_1.asyncHandler)(async (req, res) => {
     await productService.deleteProduct(req.params.id);

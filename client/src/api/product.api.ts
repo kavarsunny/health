@@ -32,3 +32,8 @@ export const deleteProduct = async (id: string) => {
   const { data } = await API.delete<ApiResponse<null>>(`/products/${id}`);
   return data;
 };
+
+export const approveProduct = async (id: string) => {
+  const { data } = await API.patch<ApiResponse<IProduct>>(`/products/${id}/approve`);
+  return data;
+};

@@ -1,99 +1,48 @@
 export declare const getAllProducts: (query: any) => Promise<{
-    products: {
-        _id: string;
-        reviews: {
-            id: string;
-            createdAt: Date;
-            updatedAt: Date;
-            rating: number;
-            userId: string;
-            productId: string;
-            comment: string;
-        }[];
+    products: (import("mongoose").Document<unknown, {}, import("../models/Product").IProduct, {}, import("mongoose").DefaultSchemaOptions> & import("../models/Product").IProduct & Required<{
+        _id: import("mongoose").Types.ObjectId;
+    }> & {
+        __v: number;
+    } & {
         id: string;
-        name: string;
-        createdAt: Date;
-        updatedAt: Date;
-        description: string;
-        price: number;
-        image: string;
-        category: string;
-        brand: string;
-        stock: number;
-        rating: number;
-        numReviews: number;
-    }[];
+    })[];
     page: number;
     totalPages: number;
     total: number;
 }>;
-export declare const getProductById: (id: string) => Promise<{
-    _id: string;
-    reviews: {
-        id: string;
-        createdAt: Date;
-        updatedAt: Date;
-        rating: number;
-        userId: string;
-        productId: string;
-        comment: string;
-    }[];
+export declare const getProductById: (id: string) => Promise<import("mongoose").Document<unknown, {}, import("../models/Product").IProduct, {}, import("mongoose").DefaultSchemaOptions> & import("../models/Product").IProduct & Required<{
+    _id: import("mongoose").Types.ObjectId;
+}> & {
+    __v: number;
+} & {
     id: string;
-    name: string;
-    createdAt: Date;
-    updatedAt: Date;
-    description: string;
-    price: number;
-    image: string;
-    category: string;
-    brand: string;
-    stock: number;
-    rating: number;
-    numReviews: number;
 }>;
-export declare const createProduct: (data: any) => Promise<{
-    _id: string;
+export declare const createProduct: (data: any) => Promise<import("mongoose").Document<unknown, {}, import("../models/Product").IProduct, {}, import("mongoose").DefaultSchemaOptions> & import("../models/Product").IProduct & Required<{
+    _id: import("mongoose").Types.ObjectId;
+}> & {
+    __v: number;
+} & {
     id: string;
-    name: string;
-    createdAt: Date;
-    updatedAt: Date;
-    description: string;
-    price: number;
-    image: string;
-    category: string;
-    brand: string;
-    stock: number;
-    rating: number;
-    numReviews: number;
 }>;
-export declare const updateProduct: (id: string, data: any) => Promise<{
-    _id: string;
+export declare const updateProduct: (id: string, data: any) => Promise<import("mongoose").Document<unknown, {}, import("../models/Product").IProduct, {}, import("mongoose").DefaultSchemaOptions> & import("../models/Product").IProduct & Required<{
+    _id: import("mongoose").Types.ObjectId;
+}> & {
+    __v: number;
+} & {
     id: string;
-    name: string;
-    createdAt: Date;
-    updatedAt: Date;
-    description: string;
-    price: number;
-    image: string;
-    category: string;
-    brand: string;
-    stock: number;
-    rating: number;
-    numReviews: number;
 }>;
-export declare const deleteProduct: (id: string) => Promise<{
-    _id: string;
+export declare const approveProduct: (id: string) => Promise<import("mongoose").Document<unknown, {}, import("../models/Product").IProduct, {}, import("mongoose").DefaultSchemaOptions> & import("../models/Product").IProduct & Required<{
+    _id: import("mongoose").Types.ObjectId;
+}> & {
+    __v: number;
+} & {
     id: string;
-    name: string;
-    createdAt: Date;
-    updatedAt: Date;
-    description: string;
-    price: number;
-    image: string;
-    category: string;
-    brand: string;
-    stock: number;
-    rating: number;
-    numReviews: number;
+}>;
+export declare const deleteProduct: (id: string) => Promise<import("mongoose").Document<unknown, {}, import("../models/Product").IProduct, {}, import("mongoose").DefaultSchemaOptions> & import("../models/Product").IProduct & Required<{
+    _id: import("mongoose").Types.ObjectId;
+}> & {
+    __v: number;
+} & {
+    id: string;
 }>;
 //# sourceMappingURL=product.service.d.ts.map

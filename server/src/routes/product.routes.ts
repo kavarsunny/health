@@ -23,6 +23,7 @@ router.get('/:id', productController.getProduct);
 // Farmers can create/update/delete their own products; admins can do anything
 router.post('/',    protect as any, farmerOrAdmin as any, productController.createProduct);
 router.put('/:id',  protect as any, farmerOrAdmin as any, productController.updateProduct);
+router.patch('/:id/approve', protect as any, admin as any, productController.approveProduct);
 router.delete('/:id', protect as any, farmerOrAdmin as any, productController.deleteProduct);
 
 export default router;

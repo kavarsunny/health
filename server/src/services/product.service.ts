@@ -40,21 +40,27 @@ export const getProductById = async (id: string) => {
 
 export const createProduct = async (data: any) => {
   const product = await Product.create({
+    farmer:      data.farmerId,
     name:        data.name,
     description: data.description,
     price:       data.price,
-    image:       data.image || '',
+    images:      data.images || [],
     category:    data.category,
     brand:       data.brand || '',
     stock:       data.stock || 0,
-    farmerName:  data.farmerName || '',
-    mrp:         data.mrp,
+    status:      'Pending',
   });
   return product;
 };
 
 export const updateProduct = async (id: string, data: any) => {
   const product = await Product.findByIdAndUpdate(id, data, { new: true, runValidators: true });
+  if (!product) throw new ApiError(404, 'Product not found');
+  return product;
+};
+
+export const approveProduct = async (id: string) => {
+  const product = await Product.findByIdAndUpdate(id, { status: 'Approved' }, { new: true });
   if (!product) throw new ApiError(404, 'Product not found');
   return product;
 };

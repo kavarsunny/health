@@ -1,18 +1,21 @@
 "use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.connectDB = void 0;
-const client_1 = require("@prisma/client");
-const prisma = new client_1.PrismaClient();
+const mongoose_1 = __importDefault(require("mongoose"));
+const env_1 = require("./env");
 const connectDB = async () => {
     try {
-        await prisma.$connect();
-        console.log('PostgreSQL Connected via Prisma');
+        const conn = await mongoose_1.default.connect(env_1.env.MONGODB_URI || process.env.DATABASE_URL || 'mongodb://localhost:27017/ecommerce');
+        console.log(`MongoDB Connected: ${conn.connection.host}`);
     }
     catch (error) {
-        console.error('PostgreSQL Connection Error:', error);
+        console.error('MongoDB Connection Error:', error);
         process.exit(1);
     }
 };
 exports.connectDB = connectDB;
-exports.default = prisma;
+exports.default = mongoose_1.default;
 //# sourceMappingURL=db.js.map

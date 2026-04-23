@@ -1,13 +1,20 @@
 import API from './axios';
 import { ApiResponse, IUser } from '../types';
 
-export const registerUser = async (name: string, email: string, password: string) => {
-  const { data } = await API.post<ApiResponse<IUser>>('/auth/register', { name, email, password });
+export const registerUser = async (name: string, email: string, phone: string, password?: string, city?: string, pincode?: string) => {
+  const { data } = await API.post<ApiResponse<IUser>>('/auth/register', { name, email, phone, password, city, pincode });
   return data;
 };
 
-export const loginUser = async (email: string, password: string) => {
-  const { data } = await API.post<ApiResponse<IUser>>('/auth/login', { email, password });
+export const registerFarmer = async (farmerData: any) => {
+  const { data } = await API.post<ApiResponse<any>>('/auth/register-farmer', farmerData);
+  return data;
+};
+
+export const loginUser = async (emailOrPhone: string, password?: string) => {
+  const isEmail = emailOrPhone.includes('@');
+  const payload = isEmail ? { email: emailOrPhone, password } : { phone: emailOrPhone, password };
+  const { data } = await API.post<ApiResponse<IUser>>('/auth/login', payload);
   return data;
 };
 
@@ -22,6 +29,16 @@ export const getAllUsers = async () => {
 
 export const getAllFarmers = async () => {
   const { data } = await API.get<ApiResponse<IUser[]>>('/auth/farmers');
+  return data;
+};
+
+export const getPendingFarmers = async () => {
+  const { data } = await API.get<ApiResponse<any[]>>('/auth/farmers/pending');
+  return data;
+};
+
+export const approveFarmer = async (farmerId: string) => {
+  const { data } = await API.patch<ApiResponse<any>>(`/auth/farmers/${farmerId}/approve`);
   return data;
 };
 

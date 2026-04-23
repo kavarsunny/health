@@ -7,7 +7,7 @@ import Loader from '../components/common/Loader';
 import AlertMessage from '../components/common/AlertMessage';
 
 const statusColor: Record<string, string> = {
-  pending: 'warning', processing: 'info', shipped: 'primary', delivered: 'success', cancelled: 'danger',
+  pending: 'warning', confirmed: 'info', packed: 'primary', out_for_delivery: 'primary', delivered: 'success', cancelled: 'danger',
 };
 
 const OrdersPage = () => {

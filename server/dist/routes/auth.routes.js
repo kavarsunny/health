@@ -41,13 +41,24 @@ const validate_middleware_1 = require("../middleware/validate.middleware");
 const router = (0, express_1.Router)();
 router.post('/register', (0, validate_middleware_1.validate)([
     (0, express_validator_1.body)('name').notEmpty().withMessage('Name is required'),
-    (0, express_validator_1.body)('email').isEmail().withMessage('Valid email is required'),
     (0, express_validator_1.body)('password').isLength({ min: 6 }).withMessage('Password must be at least 6 characters'),
 ]), authController.register);
 router.post('/login', (0, validate_middleware_1.validate)([
-    (0, express_validator_1.body)('email').isEmail().withMessage('Valid email is required'),
     (0, express_validator_1.body)('password').notEmpty().withMessage('Password is required'),
 ]), authController.login);
+router.post('/register-farmer', (0, validate_middleware_1.validate)([
+    (0, express_validator_1.body)('name').notEmpty().withMessage('Name is required'),
+    (0, express_validator_1.body)('farmerType').isIn(['Individual Farmer', 'FPO/Organization']).withMessage('Valid Farmer Type is required'),
+    (0, express_validator_1.body)('state').notEmpty().withMessage('State is required'),
+    (0, express_validator_1.body)('district').notEmpty().withMessage('District is required'),
+]), authController.registerFarmer);
 router.get('/profile', auth_middleware_1.protect, authController.getProfile);
+// Admin Routes
+router.get('/users', auth_middleware_1.protect, auth_middleware_1.admin, authController.getAllUsers);
+router.get('/farmers', auth_middleware_1.protect, auth_middleware_1.admin, authController.getAllFarmers);
+router.get('/farmers/pending', auth_middleware_1.protect, auth_middleware_1.admin, authController.getPendingFarmers);
+router.patch('/farmers/:id/approve', auth_middleware_1.protect, auth_middleware_1.admin, authController.approveFarmer);
+router.patch('/users/:id/role', auth_middleware_1.protect, auth_middleware_1.admin, authController.updateUserRole);
+router.delete('/users/:id', auth_middleware_1.protect, auth_middleware_1.admin, authController.deleteUser);
 exports.default = router;
 //# sourceMappingURL=auth.routes.js.map

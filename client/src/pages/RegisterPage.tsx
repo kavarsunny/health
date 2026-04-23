@@ -26,6 +26,9 @@ const RegisterPage = () => {
   
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
+  const [phone, setPhone] = useState('');
+  const [city, setCity] = useState('');
+  const [pincode, setPincode] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [localError, setLocalError] = useState('');
@@ -42,7 +45,7 @@ const RegisterPage = () => {
       return;
     }
     setLocalError('');
-    dispatch(register({ name, email, password }));
+    dispatch(register({ name, email, phone, password, city, pincode }));
   };
 
   return (
@@ -105,11 +108,57 @@ const RegisterPage = () => {
             
             <div className="mb-3 position-relative">
               <input 
+                type="tel" 
+                value={phone} 
+                onChange={(e) => setPhone(e.target.value)} 
+                required 
+                placeholder="Mobile Number" 
+                style={{ 
+                  width: '100%', padding: '10px 14px', borderRadius: 8, 
+                  border: '1px solid #d1cab3', background: '#fdfbf3', 
+                  color: '#4a2c11', fontSize: '0.9rem' 
+                }} 
+              />
+            </div>
+            
+            <div className="mb-3 position-relative">
+              <input 
                 type="email" 
                 value={email} 
                 onChange={(e) => setEmail(e.target.value)} 
+                placeholder="Email Address (Optional)" 
+                style={{ 
+                  width: '100%', padding: '10px 14px', borderRadius: 8, 
+                  border: '1px solid #d1cab3', background: '#fdfbf3', 
+                  color: '#4a2c11', fontSize: '0.9rem' 
+                }} 
+              />
+            </div>
+
+            <div className="mb-3 position-relative">
+              <select 
+                value={city} 
+                onChange={(e) => setCity(e.target.value)} 
                 required 
-                placeholder="Email Address" 
+                style={{ 
+                  width: '100%', padding: '10px 14px', borderRadius: 8, 
+                  border: '1px solid #d1cab3', background: '#fdfbf3', 
+                  color: '#4a2c11', fontSize: '0.9rem' 
+                }} 
+              >
+                <option value="">Select City</option>
+                <option value="Ahmedabad">Ahmedabad</option>
+                <option value="Gandhinagar">Gandhinagar</option>
+              </select>
+            </div>
+
+            <div className="mb-3 position-relative">
+              <input 
+                type="text" 
+                value={pincode} 
+                onChange={(e) => setPincode(e.target.value)} 
+                required 
+                placeholder="Pincode" 
                 style={{ 
                   width: '100%', padding: '10px 14px', borderRadius: 8, 
                   border: '1px solid #d1cab3', background: '#fdfbf3', 

@@ -41,8 +41,8 @@ const Sidebar = () => {
 
 /* ─── Empty form ─── */
 const emptyForm = {
-  name: '', description: '', price: '', mrp: '', image: '',
-  category: '', brand: '', stock: '', farmerName: '',
+  name: '', description: '', price: '', category: '', brand: '', stock: '', unit: 'kg',
+  image1: '', image2: '', image3: '', image4: ''
 };
 
 type FormData = typeof emptyForm;
@@ -96,7 +96,7 @@ const FarmerManageProducts = () => {
 
   const openCreate = () => {
     setEditId(null);
-    setForm({ ...emptyForm, farmerName });
+    setForm(emptyForm);
     setShowModal(true);
   };
 
@@ -104,10 +104,10 @@ const FarmerManageProducts = () => {
     setEditId(p._id);
     setForm({
       name: p.name || '', description: p.description || '',
-      price: String(p.price || ''), mrp: String(p.mrp || ''),
-      image: p.image || '', category: p.category || '',
-      brand: p.brand || '', stock: String(p.stock || ''),
-      farmerName: p.farmerName || farmerName,
+      price: String(p.price || ''), 
+      image1: p.images?.[0] || '', image2: p.images?.[1] || '', image3: p.images?.[2] || '', image4: p.images?.[3] || '', 
+      category: p.category || '', brand: p.brand || '', 
+      stock: String(p.stock || ''), unit: p.unit || 'kg',
     });
     setShowModal(true);
   };
@@ -120,12 +120,23 @@ const FarmerManageProducts = () => {
     e.preventDefault();
     setSaving(true);
     try {
+      const imagesArray = [form.image1, form.image2, form.image3, form.image4].filter(img => img.trim() !== '');
+      if (imagesArray.length === 0) {
+        showMsg('Please provide at least one image', 'error');
+        setSaving(false);
+        return;
+      }
+
       const payload = {
-        ...form,
+        name: form.name,
+        description: form.description,
         price: Number(form.price),
-        mrp:   form.mrp ? Number(form.mrp) : undefined,
+        images: imagesArray,
+        category: form.category,
+        brand: form.brand,
         stock: Number(form.stock),
-        farmerName: form.farmerName || farmerName,
+        unit: form.unit,
+        farmerId: user?._id
       };
       if (editId) {
         await updateProduct(editId, payload);
@@ -215,8 +226,8 @@ const FarmerManageProducts = () => {
                           background: 'rgba(0,200,83,0.1)', border: '1px solid var(--hh-border)',
                           display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0,
                         }}>
-                          {p.image ? (
-                            <img src={p.image} alt={p.name} style={{ width: '100%', height: '100%', objectFit: 'cover' }} onError={(e: any) => { e.target.style.display='none'; }} />
+                          {p.images && p.images.length > 0 ? (
+                            <img src={p.images[0]} alt={p.name} style={{ width: '100%', height: '100%', objectFit: 'cover' }} onError={(e: any) => { e.target.style.display='none'; }} />
                           ) : <span style={{ fontSize: '1.2rem' }}>🌿</span>}
                         </div>
                         <div>
@@ -226,14 +237,14 @@ const FarmerManageProducts = () => {
                       </div>
                     </td>
                     <td><span className="hh-badge-success">{p.category}</span></td>
-                    <td style={{ fontWeight: 700, color: 'var(--hh-primary)' }}>₹{p.price}</td>
-                    <td style={{ color: 'var(--hh-text-muted)', textDecoration: 'line-through', fontSize: '0.83rem' }}>{p.mrp ? `₹${p.mrp}` : '—'}</td>
+                    <td style={{ fontWeight: 700, color: 'var(--hh-primary)' }}>₹{p.price} / {p.unit || 'kg'}</td>
+                    <td style={{ color: 'var(--hh-text-muted)', textDecoration: 'line-through', fontSize: '0.83rem' }}>—</td>
                     <td>
                       <span className={p.stock > 0 ? 'hh-badge-success' : 'hh-badge-danger'}>
                         {p.stock > 0 ? `${p.stock} units` : 'Out of Stock'}
                       </span>
                     </td>
-                    <td><span className="hh-badge-success">Live</span></td>
+                    <td><span className={p.status === 'Approved' ? 'hh-badge-success' : p.status === 'Rejected' ? 'hh-badge-danger' : 'hh-badge-warning'}>{p.status || 'Pending'}</span></td>
                     <td>
                       <div style={{ display: 'flex', gap: '0.5rem' }}>
                         <button
@@ -292,15 +303,15 @@ const FarmerManageProducts = () => {
                     </div>
                   </div>
 
-                  {/* Row 2 — Price, MRP, Stock */}
+                  {/* Row 2 — Price, Stock, Unit */}
                   <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '1rem' }}>
                     <div>
                       <label style={labelStyle}>Price (₹) *</label>
                       <input name="price" type="number" min="0" step="0.01" value={form.price} onChange={handleChange} required placeholder="0.00" style={inputStyle} />
                     </div>
                     <div>
-                      <label style={labelStyle}>MRP (₹)</label>
-                      <input name="mrp" type="number" min="0" step="0.01" value={form.mrp} onChange={handleChange} placeholder="Optional" style={inputStyle} />
+                      <label style={labelStyle}>Unit</label>
+                      <input name="unit" value={form.unit} onChange={handleChange} placeholder="e.g. kg, liter, piece" style={inputStyle} />
                     </div>
                     <div>
                       <label style={labelStyle}>Stock (units) *</label>
@@ -308,25 +319,30 @@ const FarmerManageProducts = () => {
                     </div>
                   </div>
 
-                  {/* Row 3 — Brand & Farmer Name */}
-                  <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
-                    <div>
-                      <label style={labelStyle}>Brand / Variety</label>
-                      <input name="brand" value={form.brand} onChange={handleChange} placeholder="e.g. Desi, Hybrid, Organic" style={inputStyle} />
-                    </div>
-                    <div>
-                      <label style={labelStyle}>Farmer Name</label>
-                      <input name="farmerName" value={form.farmerName} onChange={handleChange} placeholder="Your name" style={inputStyle} />
-                    </div>
+                  {/* Brand */}
+                  <div>
+                    <label style={labelStyle}>Brand / Variety</label>
+                    <input name="brand" value={form.brand} onChange={handleChange} placeholder="e.g. Desi, Hybrid, Organic" style={inputStyle} />
                   </div>
 
-                  {/* Image URL */}
-                  <div>
-                    <label style={labelStyle}>Image URL</label>
-                    <input name="image" value={form.image} onChange={handleChange} placeholder="https://..." style={inputStyle} />
-                    {form.image && (
-                      <img src={form.image} alt="preview" style={{ marginTop: 8, width: 80, height: 80, objectFit: 'cover', borderRadius: 8, border: '1px solid var(--hh-border)' }} onError={(e: any) => { e.target.style.display = 'none'; }} />
-                    )}
+                  {/* Product Images */}
+                  <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
+                    <div>
+                      <label style={labelStyle}>Image 1 URL * (Primary)</label>
+                      <input name="image1" value={form.image1} onChange={handleChange} required placeholder="https://..." style={inputStyle} />
+                    </div>
+                    <div>
+                      <label style={labelStyle}>Image 2 URL</label>
+                      <input name="image2" value={form.image2} onChange={handleChange} placeholder="https://..." style={inputStyle} />
+                    </div>
+                    <div>
+                      <label style={labelStyle}>Image 3 URL</label>
+                      <input name="image3" value={form.image3} onChange={handleChange} placeholder="https://..." style={inputStyle} />
+                    </div>
+                    <div>
+                      <label style={labelStyle}>Image 4 URL</label>
+                      <input name="image4" value={form.image4} onChange={handleChange} placeholder="https://..." style={inputStyle} />
+                    </div>
                   </div>
 
                   {/* Description */}
