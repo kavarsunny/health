@@ -4,117 +4,82 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.updateOrderStatus = exports.getAllOrders = exports.getOrderById = exports.getUserOrders = exports.createOrder = void 0;
-const db_1 = __importDefault(require("../config/db"));
+const Order_1 = __importDefault(require("../models/Order"));
+const Cart_1 = __importDefault(require("../models/Cart"));
+const Product_1 = __importDefault(require("../models/Product"));
 const ApiError_1 = require("../utils/ApiError");
 const createOrder = async (userId, shippingAddress, paymentMethod) => {
-    const cart = await db_1.default.cart.findUnique({
-        where: { userId },
-        include: { items: { include: { product: true } } }
-    });
-    if (!cart || cart.items.length === 0) {
+    const cart = await Cart_1.default.findOne({ user: userId }).populate('items.product');
+    if (!cart || cart.items.length === 0)
         throw new ApiError_1.ApiError(400, 'Cart is empty');
-    }
-    const orderItemsData = [];
+    const orderItems = [];
     for (const item of cart.items) {
-        if (item.product.stock < item.quantity) {
-            throw new ApiError_1.ApiError(400, `Insufficient stock for ${item.product.name}`);
+        const product = item.product;
+        if (product.stock < item.quantity) {
+            throw new ApiError_1.ApiError(400, `Insufficient stock for ${product.name}`);
         }
-        orderItemsData.push({
-            productId: item.productId,
-            name: item.product.name,
+        orderItems.push({
+            product: product._id,
+            name: product.name,
             quantity: item.quantity,
-            price: item.product.price,
-            image: item.product.image,
+            price: product.price,
+            image: product.image || '',
         });
     }
-    const itemsPrice = orderItemsData.reduce((sum, item) => sum + item.price * item.quantity, 0);
+    const itemsPrice = orderItems.reduce((s, i) => s + i.price * i.quantity, 0);
     const shippingPrice = itemsPrice > 500 ? 0 : 50;
     const taxPrice = Math.round(itemsPrice * 0.18 * 100) / 100;
     const totalPrice = Math.round((itemsPrice + shippingPrice + taxPrice) * 100) / 100;
-    // Transaction for atomic operations
-    const order = await db_1.default.$transaction(async (tx) => {
-        // 1. Create order and order items
-        const createdOrder = await tx.order.create({
-            data: {
-                userId,
-                paymentMethod,
-                itemsPrice,
-                shippingPrice,
-                taxPrice,
-                totalPrice,
-                shippingFullName: shippingAddress.fullName,
-                shippingAddress: shippingAddress.address,
-                shippingCity: shippingAddress.city,
-                shippingPostalCode: shippingAddress.postalCode,
-                shippingCountry: shippingAddress.country,
-                items: {
-                    create: orderItemsData,
-                }
-            },
-            include: { items: true }
-        });
-        // 2. Decrement product stock
-        for (const item of cart.items) {
-            await tx.product.update({
-                where: { id: item.productId },
-                data: { stock: { decrement: item.quantity } }
-            });
-        }
-        // 3. Clear the cart
-        await tx.cartItem.deleteMany({ where: { cartId: cart.id } });
-        await tx.cart.update({ where: { id: cart.id }, data: { totalPrice: 0 } });
-        return createdOrder;
+    const order = await Order_1.default.create({
+        user: userId,
+        items: orderItems,
+        shippingAddress,
+        paymentMethod,
+        itemsPrice,
+        shippingPrice,
+        taxPrice,
+        totalPrice,
     });
-    return { ...order, _id: order.id };
+    // Decrement stock
+    for (const item of cart.items) {
+        await Product_1.default.findByIdAndUpdate(item.product._id, { $inc: { stock: -item.quantity } });
+    }
+    // Clear cart
+    cart.items = [];
+    cart.totalPrice = 0;
+    await cart.save();
+    return { ...order.toObject(), _id: order._id };
 };
 exports.createOrder = createOrder;
 const getUserOrders = async (userId) => {
-    const orders = await db_1.default.order.findMany({
-        where: { userId },
-        orderBy: { createdAt: 'desc' },
-        include: { items: true }
-    });
-    return orders.map((o) => ({ ...o, _id: o.id }));
+    const orders = await Order_1.default.find({ user: userId }).sort({ createdAt: -1 });
+    return orders.map(o => ({ ...o.toObject(), _id: o._id }));
 };
 exports.getUserOrders = getUserOrders;
 const getOrderById = async (orderId, userId, isAdmin) => {
-    const order = await db_1.default.order.findUnique({
-        where: { id: orderId },
-        include: { items: true, user: { select: { name: true, email: true } } }
-    });
+    const order = await Order_1.default.findById(orderId).populate('user', 'name email');
     if (!order)
         throw new ApiError_1.ApiError(404, 'Order not found');
-    if (!isAdmin && order.userId !== userId) {
+    if (!isAdmin && order.user.toString() !== userId)
         throw new ApiError_1.ApiError(403, 'Not authorized');
-    }
-    return { ...order, _id: order.id };
+    return { ...order.toObject(), _id: order._id };
 };
 exports.getOrderById = getOrderById;
 const getAllOrders = async () => {
-    const orders = await db_1.default.order.findMany({
-        orderBy: { createdAt: 'desc' },
-        include: { user: { select: { name: true } } }
-    });
-    return orders.map((o) => ({ ...o, _id: o.id }));
+    const orders = await Order_1.default.find().sort({ createdAt: -1 }).populate('user', 'name');
+    return orders.map(o => ({ ...o.toObject(), _id: o._id }));
 };
 exports.getAllOrders = getAllOrders;
 const updateOrderStatus = async (orderId, status) => {
-    const isDelivered = status === 'delivered';
-    const deliveredAt = isDelivered ? new Date() : undefined;
-    try {
-        const order = await db_1.default.order.update({
-            where: { id: orderId },
-            data: {
-                status,
-                ...(isDelivered && { isDelivered: true, deliveredAt })
-            },
-            include: { items: true }
-        });
-        return { ...order, _id: order.id };
+    const updateData = { status };
+    if (status === 'delivered') {
+        updateData.isDelivered = true;
+        updateData.deliveredAt = new Date();
     }
-    catch (error) {
+    const order = await Order_1.default.findByIdAndUpdate(orderId, updateData, { new: true });
+    if (!order)
         throw new ApiError_1.ApiError(404, 'Order not found');
-    }
+    return { ...order.toObject(), _id: order._id };
 };
 exports.updateOrderStatus = updateOrderStatus;
 //# sourceMappingURL=order.service.js.map

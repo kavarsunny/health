@@ -107,7 +107,7 @@ const Navbar = () => {
 
             {/* Quick Links (Desktop) */}
             <div className="ms-nav-extra-links d-none d-lg-flex">
-               <Link to="/farmer/register" className="ms-nav-extra-link">Sell</Link>
+               <Link to="/farmer-register" className="ms-nav-extra-link">Sell</Link>
                <span className="ms-nav-divider" />
                <Link to="/help" className="ms-nav-extra-link">Help</Link>
             </div>

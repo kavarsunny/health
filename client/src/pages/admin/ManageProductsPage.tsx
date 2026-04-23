@@ -2,10 +2,10 @@ import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch, RootState } from '../../store/store';
 import { fetchProducts } from '../../store/slices/productSlice';
-import { createProduct, updateProduct, deleteProduct } from '../../api/product.api';
+import { createProduct, updateProduct, deleteProduct, approveProduct } from '../../api/product.api';
 import { IProduct } from '../../types';
 
-const emptyForm = { name: '', description: '', price: 0, image: '', category: '', brand: '', stock: 0 };
+const emptyForm = { name: '', description: '', price: 0, image1: '', image2: '', image3: '', image4: '', category: '', brand: '', stock: 0, unit: 'kg' };
 const CATEGORIES = [
   'Cereals & Grains',
   'Pulses & Lentils',
@@ -41,15 +41,21 @@ const ManageProductsPage = () => {
   const openCreate = () => { setEditId(null); setForm(emptyForm); setShowModal(true); };
   const openEdit = (p: IProduct) => {
     setEditId(p._id);
-    setForm({ name: p.name, description: p.description, price: p.price, image: p.image, category: p.category, brand: p.brand, stock: p.stock });
+    setForm({ 
+      name: p.name, description: p.description, price: p.price, 
+      image1: p.images?.[0] || '', image2: p.images?.[1] || '', image3: p.images?.[2] || '', image4: p.images?.[3] || '', 
+      category: p.category, brand: p.brand || '', stock: p.stock, unit: p.unit || 'kg' 
+    });
     setShowModal(true);
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      if (editId) { await updateProduct(editId, form); setMsg('Product updated successfully!'); }
-      else { await createProduct(form); setMsg('Product created successfully!'); }
+      const imagesArray = [form.image1, form.image2, form.image3, form.image4].filter(img => img.trim() !== '');
+      const payload = { ...form, images: imagesArray };
+      if (editId) { await updateProduct(editId, payload); setMsg('Product updated successfully!'); }
+      else { await createProduct(payload); setMsg('Product created successfully!'); }
       setShowModal(false);
       dispatch(fetchProducts({ limit: '100' }));
     } catch { setMsg('Error saving product. Please try again.'); }
@@ -60,6 +66,17 @@ const ManageProductsPage = () => {
     if (!window.confirm('Delete this product? This cannot be undone.')) return;
     await deleteProduct(id);
     dispatch(fetchProducts({ limit: '100' }));
+  };
+
+  const handleApprove = async (id: string) => {
+    if (!window.confirm('Approve this product for the marketplace?')) return;
+    try {
+      await approveProduct(id);
+      setMsg('Product approved successfully!');
+      dispatch(fetchProducts({ limit: '100' }));
+    } catch {
+      setMsg('Error approving product.');
+    }
   };
 
   const filtered = products.filter((p) =>
@@ -98,7 +115,7 @@ const ManageProductsPage = () => {
         <div className="row g-3 mb-4">
           {[
             { label: 'Total Products', val: products.length, icon: 'bi-box-seam-fill', color: '#336939' },
-            { label: 'In Stock', val: products.filter(p => p.stock > 0).length, icon: 'bi-check-circle-fill', color: '#22c55e' },
+            { label: 'Pending Approval', val: products.filter(p => p.status === 'Pending').length, icon: 'bi-hourglass-split', color: '#f59e0b' },
             { label: 'Low Stock', val: products.filter(p => p.stock > 0 && p.stock < 10).length, icon: 'bi-exclamation-triangle-fill', color: '#f59e0b' },
             { label: 'Out of Stock', val: products.filter(p => p.stock === 0).length, icon: 'bi-x-circle-fill', color: '#ef4444' },
           ].map((s) => (
@@ -159,8 +176,8 @@ const ManageProductsPage = () => {
                     <tr key={p._id}>
                       <td>
                         <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-                          {p.image ? (
-                            <img src={p.image} alt={p.name} style={{ width: 44, height: 44, borderRadius: 10, objectFit: 'cover', border: '1px solid #e2e8f0' }} />
+                          {p.images && p.images.length > 0 ? (
+                            <img src={p.images[0]} alt={p.name} style={{ width: 44, height: 44, borderRadius: 10, objectFit: 'cover', border: '1px solid #e2e8f0' }} />
                           ) : (
                             <div style={{ width: 44, height: 44, borderRadius: 10, background: '#f0faf0', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                               <i className="bi bi-box-seam" style={{ color: '#336939' }} />
@@ -182,21 +199,26 @@ const ManageProductsPage = () => {
                         </span>
                       </td>
                       <td>
-                        {p.stock === 0 ? (
-                          <span className="ms-pill ms-pill-red">Out of Stock</span>
-                        ) : p.stock < 10 ? (
-                          <span className="ms-pill ms-pill-yellow">Low Stock</span>
+                        {p.status === 'Pending' ? (
+                          <span className="ms-pill ms-pill-yellow">Pending</span>
+                        ) : p.status === 'Rejected' ? (
+                          <span className="ms-pill ms-pill-red">Rejected</span>
                         ) : (
-                          <span className="ms-pill ms-pill-green">In Stock</span>
+                          <span className="ms-pill ms-pill-green">Approved</span>
                         )}
                       </td>
                       <td>
                         <div style={{ display: 'flex', gap: 6 }}>
+                          {p.status === 'Pending' && (
+                            <button className="ms-tbl-btn" style={{ color: '#059669', background: '#d1fae5' }} onClick={() => handleApprove(p._id)}>
+                              <i className="bi bi-check-circle" /> Approve
+                            </button>
+                          )}
                           <button className="ms-tbl-btn ms-tbl-btn-edit" onClick={() => openEdit(p)}>
                             <i className="bi bi-pencil" /> Edit
                           </button>
                           <button className="ms-tbl-btn ms-tbl-btn-del" onClick={() => handleDelete(p._id)}>
-                            <i className="bi bi-trash" /> Delete
+                            <i className="bi bi-trash" /> 
                           </button>
                         </div>
                       </td>
@@ -266,8 +288,14 @@ const ManageProductsPage = () => {
                 </div>
                 <div className="col-12">
                   <div className="ms-admin-form-group">
-                    <label className="ms-admin-form-label">Image URL</label>
-                    <input className="ms-admin-form-control" name="image" value={form.image} onChange={handleChange} placeholder="https://…" />
+                    <label className="ms-admin-form-label">Image 1 URL (Primary)</label>
+                    <input className="ms-admin-form-control" name="image1" value={form.image1} onChange={handleChange} placeholder="https://…" />
+                  </div>
+                </div>
+                <div className="col-12">
+                  <div className="ms-admin-form-group">
+                    <label className="ms-admin-form-label">Image 2 URL</label>
+                    <input className="ms-admin-form-control" name="image2" value={form.image2} onChange={handleChange} placeholder="https://…" />
                   </div>
                 </div>
               </div>

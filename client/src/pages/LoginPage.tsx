@@ -23,7 +23,7 @@ const LoginPage = () => {
   const dispatch = useDispatch<AppDispatch>();
   const navigate = useNavigate();
   const { isAuthenticated, loading, error } = useAuth();
-  const [email, setEmail] = useState('');
+  const [emailOrPhone, setEmailOrPhone] = useState('');
   const [password, setPassword] = useState('');
 
   useEffect(() => {
@@ -33,7 +33,7 @@ const LoginPage = () => {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    dispatch(login({ email, password }));
+    dispatch(login({ emailOrPhone, password }));
   };
 
   return (
@@ -84,11 +84,11 @@ const LoginPage = () => {
           <form onSubmit={handleSubmit}>
             <div className="mb-3 position-relative">
               <input 
-                type="email" 
-                value={email} 
-                onChange={(e) => setEmail(e.target.value)} 
+                type="text" 
+                value={emailOrPhone} 
+                onChange={(e) => setEmailOrPhone(e.target.value)} 
                 required 
-                placeholder="Email Address" 
+                placeholder="Mobile Number or Email" 
                 style={{ 
                   width: '100%', padding: '12px 16px', borderRadius: 8, 
                   border: '1px solid #d1cab3', background: '#fdfbf3', 

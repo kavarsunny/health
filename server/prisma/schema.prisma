@@ -10,28 +10,76 @@ datasource db {
 model User {
   id        String   @id @default(auto()) @map("_id") @db.ObjectId
   name      String
-  email     String   @unique
+  phone     String?  @unique
+  email     String?  @unique
   password  String
-  role      String   @default("user") // 'user', 'admin'
+  address   String?
+  role      String   @default("customer") // 'customer', 'farmer', 'admin'
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
   orders    Order[]
   reviews   Review[]
   cart      Cart?
+  farmerProfile FarmerProfile?
+  products      Product[]
+}
+
+model FarmerProfile {
+  id              String   @id @default(auto()) @map("_id") @db.ObjectId
+  userId          String   @unique @db.ObjectId
+  user            User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  farmerType      String   // 'Individual Farmer' or 'FPO/Organization'
+  whatsappNumber  String?
+  infoSource      String?
+
+  // Address Info
+  state           String
+  district        String
+  taluka          String
+  village         String
+  officeAddress   String
+  pincode         String
+
+  // Brand Info & Certs
+  brandName       String?
+  registrationType String? // FPO, FPC, SHG, etc (mainly for groups)
+  website         String?
+  gstNumber       String?
+  yearlyTurnover  String?
+  organicCert     String?  // 'Yes [Name]', 'No'
+  fssaiCert       String?  // 'Yes' or 'No'
+
+  // Profile details
+  about           String?
+  farmSizeAcres   Float?   // Primarily for Individual
+  memberCount     Int?     // Primarily for Organizations
+  achievements    String?
+  images          String[]
+
+  status          String   @default("Pending") // 'Pending', 'Approved', 'Rejected'
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
 }
 
 model Product {
   id          String   @id @default(auto()) @map("_id") @db.ObjectId
+  farmerId    String   @db.ObjectId
+  farmer      User     @relation(fields: [farmerId], references: [id])
+  
   name        String
   description String
   price       Float
-  image       String
+  images      String[]
+  unit        String   @default("kg") // 'kg', 'piece', 'litre'
   category    String
-  brand       String
+  brand       String?
   stock       Int      @default(0)
   rating      Float    @default(0)
   numReviews  Int      @default(0)
+  status      String   @default("Pending") // 'Pending', 'Approved', 'Rejected'
+  
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 
@@ -73,7 +121,7 @@ model Order {
   paidAt          DateTime?
   isDelivered     Boolean  @default(false)
   deliveredAt     DateTime?
-  status          String   @default("pending") // 'pending', 'processing', 'shipped', 'delivered', 'cancelled'
+  status          String   @default("pending") // 'pending', 'confirmed', 'packed', 'out_for_delivery', 'delivered', 'cancelled'
   createdAt       DateTime @default(now())
   updatedAt       DateTime @updatedAt
 
@@ -88,6 +136,8 @@ model Order {
   shippingCity       String?
   shippingPostalCode String?
   shippingCountry    String?
+
+  delivery           Delivery?
 }
 
 model OrderItem {
@@ -128,4 +178,16 @@ model CartItem {
   product   Product  @relation(fields: [productId], references: [id])
 
   @@unique([cartId, productId])
+}
+
+model Delivery {
+  id              String   @id @default(auto()) @map("_id") @db.ObjectId
+  orderId         String   @unique @db.ObjectId
+  order           Order    @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  
+  deliveryStatus  String   @default("Pending") // 'Pending', 'Assigned', 'In Transit', 'Delivered'
+  courierPartner  String?
+  
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
 }

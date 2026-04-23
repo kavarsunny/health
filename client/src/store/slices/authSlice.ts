@@ -14,9 +14,9 @@ const initialState: AuthState = {
 
 export const register = createAsyncThunk(
   'auth/register',
-  async ({ name, email, password }: { name: string; email: string; password: string }, { rejectWithValue }) => {
+  async ({ name, email, phone, password, city, pincode }: { name: string; email: string; phone: string; password?: string; city?: string; pincode?: string }, { rejectWithValue }) => {
     try {
-      const res = await authAPI.registerUser(name, email, password);
+      const res = await authAPI.registerUser(name, email, phone, password, city, pincode);
       const user = res.data;
       localStorage.setItem('user', JSON.stringify(user));
       return user;
@@ -28,10 +28,10 @@ export const register = createAsyncThunk(
 
 export const login = createAsyncThunk(
   'auth/login',
-  async ({ email, password }: { email: string; password: string }, { rejectWithValue }) => {
+  async ({ emailOrPhone, password }: { emailOrPhone: string; password?: string }, { rejectWithValue }) => {
     try {
-      const res = await authAPI.loginUser(email, password);
-      const user = res.data; // authAPI.loginUser returns ApiResponse<IUser>, so .data is IUser
+      const res = await authAPI.loginUser(emailOrPhone, password);
+      const user = res.data; 
       localStorage.setItem('user', JSON.stringify(user));
       return user;
     } catch (err: any) {

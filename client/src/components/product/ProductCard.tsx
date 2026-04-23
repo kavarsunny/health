@@ -27,8 +27,8 @@ const ProductCard = ({ product }: ProductCardProps) => {
     <div className="ms-product-card">
       <Link to={`/products/${product._id}`} style={{ textDecoration: 'none', display: 'block' }}>
         <div className="ms-product-img-wrap">
-          {product.image ? (
-            <img src={product.image} alt={product.name} />
+          {product.images && product.images.length > 0 ? (
+            <img src={product.images[0]} alt={product.name} />
           ) : (
             <div className="ms-product-img-placeholder" style={{ background: '#f8fdf9', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
               <svg width="48" height="48" viewBox="0 0 24 24" fill="none">

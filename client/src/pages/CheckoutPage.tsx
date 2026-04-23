@@ -63,32 +63,31 @@ const CheckoutPage = () => {
                 <Form.Group className="mb-4">
                   <Form.Label>Payment Method</Form.Label>
                   <Form.Select name="paymentMethod" value={form.paymentMethod} onChange={handleChange}>
-                    <option value="COD">Cash on Delivery</option>
-                    <option value="Card">Credit/Debit Card</option>
                     <option value="UPI">UPI</option>
+                    <option value="COD">Cash on Delivery</option>
                   </Form.Select>
                 </Form.Group>
-                <Button type="submit" variant="primary" className="w-100 rounded-pill" size="lg" disabled={loading}>
+                <button type="submit" className="btn btn-primary w-100 rounded-pill py-3" disabled={loading} style={{ background: '#2D6A4F', border: 'none' }}>
                   {loading ? 'Placing Order...' : 'Place Order'}
-                </Button>
+                </button>
               </Form>
             </Card.Body>
           </Card>
         </Col>
         <Col md={5}>
-          <Card className="border-0 shadow-sm">
+          <Card className="border-0 shadow-sm" style={{ borderRadius: '16px' }}>
             <Card.Body>
               <h5 className="fw-bold mb-3">Order Summary</h5>
               {cart.items.map((item, i) => (
                 <div key={i} className="d-flex justify-content-between mb-2">
                   <span className="small">{typeof item.product === 'string' ? 'Product' : item.product.name} x{item.quantity}</span>
-                  <span className="small fw-semibold">${(item.price * item.quantity).toFixed(2)}</span>
+                  <span className="small fw-semibold">₹{(item.price * item.quantity).toFixed(2)}</span>
                 </div>
               ))}
               <hr />
               <div className="d-flex justify-content-between fw-bold fs-5">
-                <span>Total</span>
-                <span className="text-primary">${cart.totalPrice.toFixed(2)}</span>
+                <span>Total Amount</span>
+                <span style={{ color: '#2D6A4F' }}>₹{cart.totalPrice.toFixed(2)}</span>
               </div>
             </Card.Body>
           </Card>

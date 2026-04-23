@@ -3,6 +3,7 @@ import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { logout } from '../../store/slices/authSlice';
 import { resetCart } from '../../store/slices/cartSlice';
+import { useAuth } from '../../hooks/useAuth';
 
 const Sidebar = () => {
   const location = useLocation();
@@ -53,6 +54,8 @@ const Sidebar = () => {
 };
 
 const FarmerDashboard = () => {
+  const { user } = useAuth();
+  
   const stats = [
     { label: 'Total Products', value: '24', icon: '📦', change: '+3 this week' },
     { label: 'Active Orders',  value: '12', icon: '🛒', change: '+2 today' },
@@ -73,7 +76,7 @@ const FarmerDashboard = () => {
       <div className="hh-admin-content">
         <div style={{ marginBottom: '2rem' }}>
           <h1 style={{ fontFamily: 'Rajdhani, sans-serif', fontSize: '2.2rem', fontWeight: 800, color: '#fff' }}>
-            Welcome back, Ramesh 🌿
+            Welcome back, {(user as any)?.name || 'Farmer'} 🌿
           </h1>
           <p style={{ color: 'var(--hh-text-muted)', fontSize: '0.9rem' }}>
             Here's what's happening with your farm today.
@@ -137,8 +140,8 @@ const FarmerDashboard = () => {
           <h5 style={{ fontFamily: 'Rajdhani, sans-serif', fontWeight: 700, color: '#fff', marginBottom: '1rem' }}>Quick Actions</h5>
           <div style={{ display: 'flex', gap: '1rem', flexWrap: 'wrap' }}>
             {[
-              { label: '+ Add New Product', to: '/farmer/products/new', style: 'primary' },
-              { label: '📦 View All Orders',  to: '/farmer/orders',       style: 'outline' },
+              { label: '📦 Manage My Products', to: '/farmer/products', style: 'primary' },
+              { label: '🛒 View All Orders',  to: '/farmer/orders',       style: 'outline' },
               { label: '📈 View Analytics',   to: '/farmer/analytics',    style: 'outline' },
             ].map((a) => (
               <Link
