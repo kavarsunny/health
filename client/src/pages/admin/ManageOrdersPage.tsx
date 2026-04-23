@@ -1,3 +1,5 @@
+import { downloadPDF } from '../../utils/pdfExport';
+import { useOutletContext } from 'react-router-dom';
 import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch, RootState } from '../../store/store';
@@ -18,6 +20,7 @@ const statusPill = (s: string) => {
 };
 
 const ManageOrdersPage = () => {
+  const { toggleSidebar } = useOutletContext<any>() || {};
   const dispatch = useDispatch<AppDispatch>();
   const { allOrders, loading, error } = useSelector((state: RootState) => state.order);
 
@@ -26,22 +29,36 @@ const ManageOrdersPage = () => {
   const handleStatusChange = (id: string, status: string) => {
     dispatch(changeOrderStatus({ id, status }));
   };
+  const handleExport = () => {
+    const head = [['ID', 'Customer Name', 'Status', 'Total (Rs)', 'Date']];
+    const body = allOrders.map(o => [
+      o._id.substring(0, 8),
+      o.user?.name || 'Unknown',
+      o.status.toUpperCase(),
+      o.totalPrice.toFixed(0),
+      new Date(o.createdAt).toLocaleDateString()
+    ]);
+    downloadPDF('Orders_Report', head, body);
+  };
 
   return (
     <>
       <div className="ms-admin-topbar">
         <div className="ms-admin-topbar-left">
+          <button className="btn btn-light d-none d-lg-flex align-items-center justify-content-center me-3" onClick={toggleSidebar} style={{ width: 38, height: 38, borderRadius: 10, border: '1px solid #e2e8f0' }}>
+            <i className="bi bi-list fs-5"></i>
+          </button>
           <div>
             <h4>Manage Orders</h4>
             <div className="ms-admin-breadcrumb">
               <a href="/">Store</a>
               <i className="bi bi-chevron-right" style={{ fontSize: '0.65rem' }} />
-              <span style={{ color: '#336939', fontWeight: 600 }}>Orders</span>
+              <span style={{ color: '#4f46e5', fontWeight: 600 }}>Orders</span>
             </div>
           </div>
         </div>
         <div className="ms-admin-topbar-right">
-          <button className="ms-admin-icon-btn" title="Export">
+          <button className="ms-admin-icon-btn" title="Export PDF" onClick={handleExport}>
             <i className="bi bi-download" />
           </button>
           <button className="ms-admin-icon-btn" title="Refresh" onClick={() => dispatch(fetchAllOrders())}>
@@ -61,7 +78,7 @@ const ManageOrdersPage = () => {
         {/* Stats Row */}
         <div className="row g-3 mb-4">
           {[
-            { label: 'Total Orders', val: allOrders.length, color: '#336939', icon: 'bi-cart-check-fill' },
+            { label: 'Total Orders', val: allOrders.length, color: '#4f46e5', icon: 'bi-cart-check-fill' },
             { label: 'Pending', val: allOrders.filter(o => o.status === 'pending').length, color: '#f59e0b', icon: 'bi-clock-fill' },
             { label: 'Confirmed', val: allOrders.filter(o => o.status === 'confirmed').length, color: '#0ea5e9', icon: 'bi-check-circle' },
             { label: 'Packed', val: allOrders.filter(o => o.status === 'packed').length, color: '#0ea5e9', icon: 'bi-box-seam' },
@@ -122,7 +139,7 @@ const ManageOrdersPage = () => {
                         </div>
                       </td>
                       <td className="ms-td-muted">{o.items.length}</td>
-                      <td style={{ fontWeight: 700, color: '#336939' }}>₹{o.totalPrice.toFixed(0)}</td>
+                      <td style={{ fontWeight: 700, color: '#4f46e5' }}>₹{o.totalPrice.toFixed(0)}</td>
                       <td><span className={statusPill(o.status)}>{o.status}</span></td>
                       <td>
                         {o.isPaid

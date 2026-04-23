@@ -1,8 +1,10 @@
 import { useEffect, useState } from 'react';
+import { useOutletContext } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch, RootState } from '../../store/store';
 import { fetchProducts } from '../../store/slices/productSlice';
 import { createProduct, updateProduct, deleteProduct, approveProduct } from '../../api/product.api';
+import { downloadPDF } from '../../utils/pdfExport';
 import { IProduct } from '../../types';
 
 const emptyForm = { name: '', description: '', price: 0, image1: '', image2: '', image3: '', image4: '', category: '', brand: '', stock: 0, unit: 'kg' };
@@ -23,6 +25,7 @@ const CATEGORIES = [
 ];
 
 const ManageProductsPage = () => {
+  const { toggleSidebar } = useOutletContext<any>() || {};
   const dispatch = useDispatch<AppDispatch>();
   const { products, loading } = useSelector((state: RootState) => state.product);
   const [showModal, setShowModal] = useState(false);
@@ -84,21 +87,39 @@ const ManageProductsPage = () => {
     p.category?.toLowerCase().includes(search.toLowerCase())
   );
 
+  const handleExport = () => {
+    const head = [['Name', 'Category', 'Price (Rs)', 'Stock', 'Unit']];
+    const body = filtered.map(p => [
+      p.name,
+      p.category || 'N/A',
+      p.price.toString(),
+      p.stock.toString(),
+      p.unit || 'kg'
+    ]);
+    downloadPDF('Products_Report', head, body);
+  };
+
   return (
     <>
       <div className="ms-admin-topbar">
         <div className="ms-admin-topbar-left">
+          <button className="btn btn-light d-none d-lg-flex align-items-center justify-content-center me-3" onClick={toggleSidebar} style={{ width: 38, height: 38, borderRadius: 10, border: '1px solid #e2e8f0' }}>
+            <i className="bi bi-list fs-5"></i>
+          </button>
           <div>
             <h4>Manage Products</h4>
             <div className="ms-admin-breadcrumb">
               <a href="/">Store</a>
               <i className="bi bi-chevron-right" style={{ fontSize: '0.65rem' }} />
-              <span style={{ color: '#336939', fontWeight: 600 }}>Products</span>
+              <span style={{ color: '#4f46e5', fontWeight: 600 }}>Products</span>
             </div>
           </div>
         </div>
         <div className="ms-admin-topbar-right">
-          <button className="ms-btn-primary" onClick={openCreate} style={{ padding: '8px 18px', fontSize: '0.85rem', cursor: 'pointer' }}>
+          <button className="ms-admin-icon-btn" title="Export PDF" onClick={handleExport}>
+            <i className="bi bi-file-earmark-pdf" />
+          </button>
+          <button className="ms-admin-btn-primary" onClick={openCreate} style={{ padding: '8px 18px', fontSize: '0.85rem', cursor: 'pointer' }}>
             <i className="bi bi-plus-lg" /> Add Product
           </button>
         </div>
@@ -114,7 +135,7 @@ const ManageProductsPage = () => {
         {/* Stats */}
         <div className="row g-3 mb-4">
           {[
-            { label: 'Total Products', val: products.length, icon: 'bi-box-seam-fill', color: '#336939' },
+            { label: 'Total Products', val: products.length, icon: 'bi-box-seam-fill', color: '#4f46e5' },
             { label: 'Pending Approval', val: products.filter(p => p.status === 'Pending').length, icon: 'bi-hourglass-split', color: '#f59e0b' },
             { label: 'Low Stock', val: products.filter(p => p.stock > 0 && p.stock < 10).length, icon: 'bi-exclamation-triangle-fill', color: '#f59e0b' },
             { label: 'Out of Stock', val: products.filter(p => p.stock === 0).length, icon: 'bi-x-circle-fill', color: '#ef4444' },

@@ -1,11 +1,13 @@
+import { downloadPDF } from '../../utils/pdfExport';
 import { useState, useEffect, useMemo } from 'react';
-import { Link, useLocation, useNavigate } from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { 
   AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, 
   PieChart, Pie, Cell 
 } from 'recharts';
 import { getAllUsers, getAllFarmers, updateUserRole, deleteUser } from '../../api/auth.api';
+import { getAllOrders } from '../../api/order.api';
 import { logout } from '../../store/slices/authSlice';
 import { resetCart } from '../../store/slices/cartSlice';
 import { RootState } from '../../store/store';
@@ -34,73 +36,6 @@ const roleDistribution = [
   { name: 'Farmers', value: 120, color: '#0ea5e9' },
   { name: 'Admins', value: 15, color: '#f59e0b' },
 ];
-
-const navSections = [
-  { label: 'Main', items: [{ icon: SVGDashboard, label: 'Overview', to: '/superadmin/dashboard' }] },
-  { label: 'Management', items: [
-    { icon: SVGUsers, label: 'All Users', to: '/superadmin/users' },
-    { icon: SVGFarmersIcon, label: 'Approve Farmers', to: '/superadmin/farmers' },
-    { icon: SVGInventory, label: 'Inventory', to: '/admin/products' },
-    { icon: SVGOrders, label: 'Sales Orders', to: '/admin/orders' },
-  ]},
-  { label: 'Security', items: [{ icon: SVGSecurityIcon, label: 'Permissions', to: '/superadmin/permissions' }] }
-];
-
-const SuperSidebar = ({ isOpen, onClose }: { isOpen: boolean; onClose: () => void }) => {
-  const location = useLocation();
-  const dispatch = useDispatch<AppDispatch>();
-  const navigate = useNavigate();
-  const { user } = useSelector((state: RootState) => state.auth as any);
-
-  const handleLogout = () => { dispatch(logout()); dispatch(resetCart()); navigate('/'); };
-
-  return (
-    <>
-      {/* Mobile Overlay */}
-      {isOpen && <div className="ms-admin-sidebar-overlay d-lg-none" onClick={onClose} />}
-      
-      <aside className={`ms-admin-sidebar-v2 ${isOpen ? 'show' : ''}`}>
-        <div className="ms-sidebar-logo-v2">
-          <div className="brand px-3 py-4 text-center d-flex justify-content-between align-items-center">
-            <Logo width={140} />
-            <button className="btn btn-sm btn-light d-lg-none" onClick={onClose}>✕</button>
-          </div>
-        </div>
-
-        <nav className="flex-grow-1">
-          {navSections.map((section) => (
-            <div className="ms-sidebar-section" key={section.label}>
-              <div className="ms-sidebar-section-label">{section.label}</div>
-              {section.items.map((item) => (
-                <Link key={item.to} to={item.to} className={`ms-sidebar-link ${location.pathname === item.to ? 'active' : ''}`} onClick={() => onClose()}>
-                  <item.icon size={20} /> <span className="ms-2">{item.label}</span>
-                </Link>
-              ))}
-            </div>
-          ))}
-        </nav>
-
-        <div className="ms-sidebar-footer p-3 mt-auto">
-          <Link to="/" className="ms-sidebar-link border-top pt-3">
-            <SVGArrowLeft size={20} /> <span className="ms-2">Public Store</span>
-          </Link>
-          <button onClick={handleLogout} className="ms-sidebar-link text-danger border-0 bg-transparent w-100 text-start">
-            <SVGPowerIcon size={20} /> <span className="ms-2">Sign Out</span>
-          </button>
-          {user && (
-            <div className="mt-3 p-2 bg-light rounded d-flex align-items-center gap-2">
-              <div className="ms-admin-avatar sm" style={{ background: 'var(--ms-primary)', color: 'white' }}>{user.name?.charAt(0)}</div>
-              <div className="overflow-hidden">
-                <div className="fw-bold small text-dark truncate">{user.name}</div>
-                <div className="text-muted smaller">Super Admin</div>
-              </div>
-            </div>
-          )}
-        </div>
-      </aside>
-    </>
-  );
-};
 
 const UserManagementTable = ({ title, type = 'all' }: { title: string; type?: 'all' | 'farmers' }) => {
   const [users, setUsers] = useState<IUser[]>([]);
@@ -297,13 +232,84 @@ const FarmerApprovalTable = () => {
 
 const SuperAdminDashboard = () => {
   const location = useLocation();
-  const [stats, setStats] = useState({ users: 0, farmers: 0 });
+    const [stats, setStats] = useState({ users: 0, farmers: 0, revenue: 0, activeListings: 4210 });
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [roleDistribution, setRoleDistribution] = useState<any[]>([]);
+  const [platformData, setPlatformData] = useState<any[]>([]);
+  const [recentActivity, setRecentActivity] = useState<any[]>([]);
+  const [allUsers, setAllUsers] = useState<any[]>([]);
 
   useEffect(() => {
     (async () => {
-      const [u, f] = await Promise.all([getAllUsers(), getAllFarmers()]);
-      if (u.success && f.success) setStats({ users: u.data.length, farmers: f.data.length });
+      const [u, f, o] = await Promise.all([getAllUsers(), getAllFarmers(), getAllOrders()]);
+      if (u.success && f.success && o.success) {
+        setAllUsers(u.data);
+        setStats({ users: u.data.length, farmers: f.data.length, revenue: o.data.reduce((sum: any, order: any) => sum + order.totalPrice, 0), activeListings: 4210 });
+        
+        const customers = u.data.filter((user: any) => user.role === 'customer' || user.role === 'user').length;
+        const farmersCount = u.data.filter((user: any) => user.role === 'farmer').length;
+        const admins = u.data.filter((user: any) => user.role === 'admin' || user.role === 'superadmin').length;
+        setRoleDistribution([
+          { name: 'Customers', value: customers, color: '#2b3d84' },
+          { name: 'Farmers', value: farmersCount, color: '#0ea5e9' },
+          { name: 'Admins', value: admins, color: '#f59e0b' },
+        ]);
+
+        const last7Days = Array.from({length: 7}, (_, i) => {
+          const d = new Date();
+          d.setDate(d.getDate() - (6 - i));
+          return d;
+        });
+        
+        const platData = last7Days.map(date => {
+          const dateStr = date.toLocaleDateString('en-US', { weekday: 'short' });
+          const start = new Date(date.setHours(0,0,0,0));
+          const end = new Date(date.setHours(23,59,59,999));
+          
+          const dailyUsers = u.data.filter((user: any) => new Date(user.createdAt) >= start && new Date(user.createdAt) <= end).length;
+          const dailyRevenue = o.data.filter((order: any) => new Date(order.createdAt) >= start && new Date(order.createdAt) <= end).reduce((sum: any, order: any) => sum + order.totalPrice, 0);
+          
+          return { name: dateStr, users: dailyUsers, revenue: dailyRevenue };
+        });
+        setPlatformData(platData);
+
+        const sortedUsers = [...u.data].sort((a: any, b: any) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()).slice(0, 3);
+        const sortedOrders = [...o.data].sort((a: any, b: any) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()).slice(0, 3);
+        
+        const activity: any[] = [];
+        sortedUsers.forEach((user: any) => {
+          activity.push({
+            timeObj: new Date(user.createdAt),
+            text: `New User: ${user.name} signed up`,
+            dot: 'bg-primary'
+          });
+        });
+        sortedOrders.forEach((order: any) => {
+          activity.push({
+            timeObj: new Date(order.createdAt),
+            text: `Order: #${order._id.slice(-6)} placed (₹${order.totalPrice.toFixed(0)})`,
+            dot: 'bg-success'
+          });
+        });
+
+        const timeSince = (date: Date) => {
+          const seconds = Math.floor((new Date().getTime() - date.getTime()) / 1000);
+          let interval = seconds / 31536000;
+          if (interval > 1) return Math.floor(interval) + " yrs ago";
+          interval = seconds / 2592000;
+          if (interval > 1) return Math.floor(interval) + " mos ago";
+          interval = seconds / 86400;
+          if (interval > 1) return Math.floor(interval) + " days ago";
+          interval = seconds / 3600;
+          if (interval > 1) return Math.floor(interval) + " hrs ago";
+          interval = seconds / 60;
+          if (interval > 1) return Math.floor(interval) + " mins ago";
+          return Math.floor(seconds) + " secs ago";
+        };
+
+        activity.sort((a, b) => b.timeObj.getTime() - a.timeObj.getTime());
+        setRecentActivity(activity.slice(0, 4).map(a => ({ text: a.text, time: timeSince(a.timeObj), dot: a.dot })));
+      }
     })();
   }, []);
 
@@ -313,8 +319,8 @@ const SuperAdminDashboard = () => {
       {[
         { label: 'Total Members', value: stats.users, trend: '+12%', up: true, icon: SVGUsers },
         { label: 'Verified Farmers', value: stats.farmers, trend: '+4%', up: true, icon: SVGFarmersIcon },
-        { label: 'Active Listings', value: '4,210', trend: '+18%', up: true, icon: SVGInventory },
-        { label: 'MRR Growth', value: '₹12.4L', trend: '-2%', up: false, icon: SVGOrders },
+        { label: 'Active Listings', value: stats.activeListings, trend: 'Catalog', up: true, icon: SVGInventory },
+        { label: 'MRR Growth', value: `₹${stats.revenue.toLocaleString('en-IN')}`, trend: 'Total', up: true, icon: SVGOrders },
       ].map(s => (
         <div className="col-md-3" key={s.label}>
           <div className="card border-0 shadow-sm p-3 h-100">
@@ -337,8 +343,8 @@ const SuperAdminDashboard = () => {
             <h5 className="fw-bold mb-0">Platform Performance</h5>
             <select className="form-select form-select-sm w-auto"><option>Last 7 Days</option><option>Last 30 Days</option></select>
           </div>
-          <div style={{ width: '100%', height: 320 }}>
-            <ResponsiveContainer>
+          <div style={{ width: '100%', height: 320, minWidth: 0 }}>
+            <ResponsiveContainer width="100%" height="100%">
               <AreaChart data={platformData}>
                 <defs>
                    <linearGradient id="colorRev" x1="0" y1="0" x2="0" y2="1">
@@ -365,8 +371,8 @@ const SuperAdminDashboard = () => {
       <div className="col-lg-4">
         <div className="card border-0 shadow-sm p-4 mb-4">
           <h5 className="fw-bold mb-3">User Segments</h5>
-          <div style={{ width: '100%', height: 160 }}>
-            <ResponsiveContainer>
+          <div style={{ width: '100%', height: 160, minWidth: 0 }}>
+            <ResponsiveContainer width="100%" height="100%">
               <PieChart>
                 <Pie data={roleDistribution} innerRadius={50} outerRadius={70} paddingAngle={5} dataKey="value">
                   {roleDistribution.map((entry, index) => <Cell key={index} fill={entry.color} />)}
@@ -387,12 +393,7 @@ const SuperAdminDashboard = () => {
 
         <div className="card border-0 shadow-sm p-4">
            <h5 className="fw-bold mb-3">Recent Activity</h5>
-          {[
-            { text: 'Auth: Admin@test logged in', time: '2 min ago', dot: 'bg-primary' },
-            { text: 'Role: Suresh C. updated to Farmer', time: '1 hr ago', dot: 'bg-info' },
-            { text: 'Order: #HH-921 completed', time: '3 hrs ago', dot: 'bg-success' },
-            { text: 'System: New DB backup stored', time: '4 hrs ago', dot: 'bg-warning' },
-          ].map((a, i) => (
+          {recentActivity.map((a, i) => (
             <div key={i} className="d-flex gap-3 mb-3 border-start ps-3 position-relative">
               <div className={`rounded-circle ${a.dot} position-absolute`} style={{ width: 10, height: 10, left: -5, top: 4, border: '2px solid white' }} />
               <div>
@@ -406,6 +407,18 @@ const SuperAdminDashboard = () => {
     </div>
   );
 
+  
+  const handleExport = () => {
+    const head = [['Name', 'Email', 'Role', 'Joined Date']];
+    const body = allUsers.map((u: any) => [
+      u.name,
+      u.email,
+      u.role.toUpperCase(),
+      new Date(u.createdAt).toLocaleDateString()
+    ]);
+    downloadPDF('Platform_Users_Report', head, body);
+  };
+
   const renderContent = () => {
     if (location.pathname === '/superadmin/users') return <UserManagementTable title="User Directory" />;
     if (location.pathname === '/superadmin/farmers') return <FarmerApprovalTable />;
@@ -413,16 +426,15 @@ const SuperAdminDashboard = () => {
   };
 
   return (
-    <div className="ms-admin-wrap">
-      <SuperSidebar isOpen={sidebarOpen} onClose={() => setSidebarOpen(false)} />
-      <div className="ms-admin-content-v2">
+    <>
+
         <div className="ms-admin-dashboard-header p-4 pb-0 d-flex justify-content-between align-items-center">
            <div>
               <h4 className="fw-bold mb-0">Platform Hub</h4>
               <p className="small text-muted mb-0">Platform performance & management</p>
            </div>
            <div className="d-flex gap-2">
-              <button className="btn btn-white shadow-sm btn-sm">Export Data</button>
+              <button className="btn btn-white shadow-sm btn-sm" onClick={handleExport}><i className="bi bi-file-earmark-pdf me-1"></i> Export PDF</button>
               <button className="btn btn-primary btn-sm shadow-sm">+ Add New Member</button>
            </div>
         </div>
@@ -430,8 +442,7 @@ const SuperAdminDashboard = () => {
         <main className="p-4" style={{ minHeight: 'calc(100vh - 150px)' }}>
           {renderContent()}
         </main>
-      </div>
-    </div>
+          </>
   );
 };
 
