@@ -1,62 +1,217 @@
-import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 
-const SeasonalBanner = () => {
-  const [time, setTime] = useState({ h: 5, m: 47, s: 22 });
+/* Seasonal Fresh Picks — bright, colorful, warm */
+const picks = [
+  {
+    name: 'Alphonso Mangoes',
+    origin: 'Ratnagiri, MH',
+    label: 'Fresh Today',
+    labelColor: '#f59e0b',
+    labelBg: '#fffbeb',
+    img: 'https://images.unsplash.com/photo-1553279768-865429fa0078?q=80&w=400&auto=format&fit=crop',
+    to: '/products?category=Fruits',
+  },
+  {
+    name: 'Fresh Coconuts',
+    origin: 'Kerala, India',
+    label: 'Direct Farm',
+    labelColor: '#16a34a',
+    labelBg: '#f0fdf4',
+    img: 'https://images.unsplash.com/photo-1580984969071-a8da5656c2fb?q=80&w=400&auto=format&fit=crop',
+    to: '/products?category=Fruits',
+  },
+  {
+    name: 'Wild Forest Honey',
+    origin: 'Himachal, India',
+    label: '100% Raw',
+    labelColor: '#d97706',
+    labelBg: '#fef3c7',
+    img: 'https://images.unsplash.com/photo-1587049352851-8d4e89134fc2?q=80&w=400&auto=format&fit=crop',
+    to: '/products?category=Natural+Sweeteners',
+  },
+  {
+    name: 'Red Rice (Organic)',
+    origin: 'Wayanad, Kerala',
+    label: 'Heirloom Variety',
+    labelColor: '#dc2626',
+    labelBg: '#fef2f2',
+    img: 'https://images.unsplash.com/photo-1574323347407-f5e1ad6d020b?q=80&w=400&auto=format&fit=crop',
+    to: '/products?category=Cereals+%26+Grains',
+  },
+];
 
-  useEffect(() => {
-    const t = setInterval(() => {
-      setTime((prev) => {
-        let { h, m, s } = prev;
-        s--; if (s < 0) { s = 59; m--; } if (m < 0) { m = 59; h--; } if (h < 0) { h = 23; }
-        return { h, m, s };
-      });
-    }, 1000);
-    return () => clearInterval(t);
-  }, []);
-
-  const pad = (n: number) => String(n).padStart(2, '0');
-
-  return (
-    <section className="ms-section">
-      <div className="container">
-        <div className="ms-promo-banner">
-          <div style={{ position: 'relative', zIndex: 2 }}>
-            <div className="ms-promo-eyebrow">🔥 Flash Sale — Today Only</div>
-            <h2 className="ms-promo-title">
-              Farm Fresh Deals<br />Up to 40% OFF
-            </h2>
-            <p className="ms-promo-sub">
-              Limited-time offer on our most popular organic produce. Sourced fresh this morning — grab yours before it's gone!
-            </p>
-            <div className="ms-countdown">
-              {[
-                { val: pad(time.h), label: 'Hours' },
-                { val: pad(time.m), label: 'Mins' },
-                { val: pad(time.s), label: 'Secs' },
-              ].map((c) => (
-                <div key={c.label} className="ms-countdown-box">
-                  <div className="ms-countdown-num">{c.val}</div>
-                  <div className="ms-countdown-label">{c.label}</div>
-                </div>
-              ))}
-            </div>
-            <Link to="/products?sale=true" className="ms-btn-white">
-              Shop Sale <i className="bi bi-arrow-right" />
-            </Link>
-          </div>
-          <div className="ms-promo-emojis" style={{ position: 'relative', zIndex: 2 }}>
-            {/* SVG mango */}
-            <svg width="72" height="72" viewBox="0 0 80 80" fill="none"><defs><radialGradient id="pb1" cx="35%" cy="30%" r="70%"><stop offset="0%" stopColor="#ffcc02"/><stop offset="100%" stopColor="#e65100"/></radialGradient></defs><path d="M32 70 C22 55 18 36 24 22 C30 8 50 8 56 22 C62 36 58 58 48 70 Z" fill="url(#pb1)"/><ellipse cx="28" cy="34" rx="10" ry="18" fill="rgba(255,255,255,0.15)"/><path d="M40 18 Q44 8 50 16" stroke="#f57f17" strokeWidth="2.5" fill="none" strokeLinecap="round"/></svg>
-            {/* SVG strawberry */}
-            <svg width="72" height="72" viewBox="0 0 80 80" fill="none"><defs><radialGradient id="pb2" cx="35%" cy="30%" r="70%"><stop offset="0%" stopColor="#ef9a9a"/><stop offset="100%" stopColor="#c62828"/></radialGradient></defs><path d="M40 72 C22 58 14 36 22 22 C30 8 50 8 58 22 C66 36 58 58 40 72Z" fill="url(#pb2)"/><circle cx="32" cy="30" r="8" fill="rgba(255,255,255,0.15)"/><path d="M32 20 C32 20 38 10 44 14 C40 18 34 22 32 20Z" fill="#66bb6a"/><path d="M48 16 C48 16 40 6 34 10 C38 14 44 18 48 16Z" fill="#4caf50"/><circle cx="34" cy="40" r="2" fill="rgba(255,255,255,0.3)"/><circle cx="44" cy="50" r="2" fill="rgba(255,255,255,0.3)"/><circle cx="40" cy="35" r="1.5" fill="rgba(255,255,255,0.25)"/></svg>
-            {/* SVG avocado */}
-            <svg width="72" height="72" viewBox="0 0 80 80" fill="none"><defs><radialGradient id="pb3" cx="35%" cy="30%" r="70%"><stop offset="0%" stopColor="#80cbc4"/><stop offset="100%" stopColor="#004d40"/></radialGradient></defs><ellipse cx="40" cy="44" rx="24" ry="32" fill="url(#pb3)"/><ellipse cx="40" cy="50" rx="14" ry="20" fill="#f9a825" opacity="0.75"/><circle cx="40" cy="55" r="10" fill="#5d4037" opacity="0.88"/><ellipse cx="32" cy="30" rx="9" ry="14" fill="rgba(255,255,255,0.15)"/></svg>
-          </div>
+const SeasonalBanner = () => (
+  <section className="sb-section">
+    {/* Header */}
+    <div className="container">
+      <div className="sb-hdr">
+        <div>
+          <div className="sb-eyebrow">Fresh This Season</div>
+          <h2 className="sb-title">Today's Fresh Picks</h2>
+          <p className="sb-sub">Harvested this week and delivered straight from the farm to your home.</p>
         </div>
+        <Link to="/products" className="sb-viewall d-none d-md-flex">
+          See All Fresh Items <i className="bi bi-arrow-right" />
+        </Link>
       </div>
-    </section>
-  );
-};
+
+      {/* Cards */}
+      <div className="sb-grid">
+        {picks.map((p) => (
+          <Link key={p.name} to={p.to} className="sb-card">
+            <div className="sb-img-wrap">
+              <img src={p.img} alt={p.name} loading="lazy" />
+              <div className="sb-img-overlay" />
+              <div className="sb-label" style={{ background: p.labelBg, color: p.labelColor }}>
+                {p.label}
+              </div>
+            </div>
+            <div className="sb-body">
+              <div className="sb-name">{p.name}</div>
+              <div className="sb-origin">
+                <i className="bi bi-geo-alt-fill" style={{ color: '#f59e0b' }} /> {p.origin}
+              </div>
+            </div>
+          </Link>
+        ))}
+      </div>
+
+      {/* Mobile View All */}
+      <div className="text-center mt-4 d-md-none">
+        <Link to="/products" className="ms-btn-outline">
+          See All Fresh Items <i className="bi bi-arrow-right" />
+        </Link>
+      </div>
+    </div>
+
+    <style>{`
+      .sb-section {
+        background: linear-gradient(180deg, #fffbeb 0%, #fff 100%);
+        padding: 56px 0;
+        border-top: 1px solid #fde68a;
+        border-bottom: 1px solid #f1f5f9;
+      }
+      .sb-hdr {
+        display: flex;
+        align-items: flex-end;
+        justify-content: space-between;
+        flex-wrap: wrap;
+        gap: 16px;
+        margin-bottom: 28px;
+      }
+      .sb-eyebrow {
+        font-size: 0.82rem;
+        font-weight: 700;
+        color: #d97706;
+        letter-spacing: 0.5px;
+        margin-bottom: 4px;
+      }
+      .sb-title {
+        font-size: clamp(1.5rem, 3vw, 2.2rem);
+        font-weight: 800;
+        color: #111827;
+        font-family: var(--font-display);
+        margin: 0 0 6px;
+        line-height: 1.15;
+      }
+      .sb-sub {
+        font-size: 0.92rem;
+        color: #6b7280;
+        max-width: 420px;
+        margin: 0;
+        line-height: 1.6;
+      }
+      .sb-viewall {
+        display: flex;
+        align-items: center;
+        gap: 5px;
+        font-size: 0.85rem;
+        font-weight: 700;
+        color: #d97706;
+        text-decoration: none;
+        white-space: nowrap;
+        transition: gap 0.2s;
+      }
+      .sb-viewall:hover { gap: 9px; color: #b45309; }
+      .sb-grid {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 16px;
+      }
+      .sb-card {
+        display: block;
+        border-radius: 18px;
+        overflow: hidden;
+        border: 2px solid #fde68a;
+        background: #fff;
+        text-decoration: none;
+        transition: all 0.25s;
+        box-shadow: 0 2px 12px rgba(245,158,11,0.08);
+      }
+      .sb-card:hover {
+        transform: translateY(-6px);
+        box-shadow: 0 16px 40px rgba(245,158,11,0.18);
+        border-color: #f59e0b;
+      }
+      .sb-img-wrap {
+        position: relative;
+        height: 170px;
+        overflow: hidden;
+        background: #fef3c7;
+      }
+      .sb-img-wrap img {
+        width: 100%; height: 100%;
+        object-fit: cover;
+        transition: transform 0.45s;
+      }
+      .sb-card:hover .sb-img-wrap img { transform: scale(1.07); }
+      .sb-img-overlay {
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(180deg, transparent 55%, rgba(0,0,0,0.18) 100%);
+      }
+      .sb-label {
+        position: absolute;
+        top: 10px;
+        left: 10px;
+        font-size: 0.68rem;
+        font-weight: 700;
+        padding: 3px 10px;
+        border-radius: 999px;
+        letter-spacing: 0.3px;
+        box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+      }
+      .sb-body {
+        padding: 14px 14px 16px;
+      }
+      .sb-name {
+        font-size: 0.92rem;
+        font-weight: 700;
+        color: #111827;
+        margin-bottom: 4px;
+        font-family: var(--font-display);
+        line-height: 1.3;
+      }
+      .sb-origin {
+        font-size: 0.75rem;
+        color: #6b7280;
+        font-weight: 500;
+        display: flex;
+        align-items: center;
+        gap: 3px;
+      }
+      @media (max-width: 991px) {
+        .sb-grid { grid-template-columns: repeat(2, 1fr); }
+      }
+      @media (max-width: 575px) {
+        .sb-section { padding: 40px 0; }
+        .sb-grid { grid-template-columns: repeat(2, 1fr); gap: 10px; }
+        .sb-img-wrap { height: 130px; }
+        .sb-body { padding: 10px 10px 12px; }
+        .sb-name { font-size: 0.82rem; }
+      }
+    `}</style>
+  </section>
+);
 
 export default SeasonalBanner;

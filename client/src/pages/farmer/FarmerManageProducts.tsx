@@ -13,17 +13,17 @@ const Sidebar = () => {
   const navigate = useNavigate();
   const handleLogout = () => { dispatch(logout()); dispatch(resetCart()); navigate('/'); };
   const navItems = [
-    { icon: '📊', label: 'Dashboard',   to: '/farmer/dashboard' },
-    { icon: '📦', label: 'My Products', to: '/farmer/products' },
-    { icon: '🛒', label: 'Orders',      to: '/farmer/orders' },
-    { icon: '💰', label: 'Earnings',    to: '/farmer/earnings' },
-    { icon: '📈', label: 'Analytics',   to: '/farmer/analytics' },
-    { icon: '⚙️', label: 'Settings',    to: '/farmer/settings' },
+    { icon: '', label: 'Dashboard',   to: '/farmer/dashboard' },
+    { icon: '', label: 'My Products', to: '/farmer/products' },
+    { icon: '', label: 'Orders',      to: '/farmer/orders' },
+    { icon: '', label: 'Earnings',    to: '/farmer/earnings' },
+    { icon: '', label: 'Analytics',   to: '/farmer/analytics' },
+    { icon: '', label: 'Settings',    to: '/farmer/settings' },
   ];
   return (
     <aside className="hh-admin-sidebar">
       <div style={{ padding: '1rem 1.5rem', borderBottom: '1px solid var(--hh-border)', marginBottom: '1rem' }}>
-        <div style={{ fontFamily: 'Rajdhani,sans-serif', fontSize: '1.4rem', fontWeight: 800, background: 'var(--hh-grad-primary)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text' }}>🌾 Farmer Portal</div>
+        <div style={{ fontFamily: 'Rajdhani,sans-serif', fontSize: '1.4rem', fontWeight: 800, background: 'var(--hh-grad-primary)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text' }}>Farmer Portal</div>
         <div style={{ fontSize: '0.75rem', color: 'var(--hh-text-muted)', marginTop: '0.2rem' }}>HealthyHaat</div>
       </div>
       {navItems.map(item => (
@@ -32,8 +32,8 @@ const Sidebar = () => {
         </Link>
       ))}
       <div style={{ borderTop: '1px solid var(--hh-border)', marginTop: '1rem', paddingTop: '0.5rem' }}>
-        <Link to="/" className="hh-sidebar-item"><span>🏠</span><span>Back to Store</span></Link>
-        <button onClick={handleLogout} className="hh-sidebar-item" style={{ width: '100%', textAlign: 'left', background: 'none', border: 'none', cursor: 'pointer' }}><span>🚪</span><span>Logout</span></button>
+        <Link to="/" className="hh-sidebar-item"><span></span><span>Back to Store</span></Link>
+        <button onClick={handleLogout} className="hh-sidebar-item" style={{ width: '100%', textAlign: 'left', background: 'none', border: 'none', cursor: 'pointer' }}><span></span><span>Logout</span></button>
       </div>
     </aside>
   );
@@ -171,7 +171,7 @@ const FarmerManageProducts = () => {
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '2rem', flexWrap: 'wrap', gap: '1rem' }}>
           <div>
             <h1 style={{ fontFamily: 'Rajdhani,sans-serif', fontSize: '2rem', fontWeight: 800, color: '#fff', marginBottom: '0.2rem' }}>
-              📦 My Products
+              My Products
             </h1>
             <p style={{ color: 'var(--hh-text-muted)', fontSize: '0.88rem', margin: 0 }}>Manage your farm produce listings</p>
           </div>
@@ -198,7 +198,7 @@ const FarmerManageProducts = () => {
           <div className="hh-loader"><div className="hh-spinner" /></div>
         ) : products.length === 0 ? (
           <div style={{ textAlign: 'center', padding: '4rem', color: 'var(--hh-text-muted)' }}>
-            <div style={{ fontSize: '4rem', marginBottom: '1rem' }}>📦</div>
+              <div style={{ fontSize: '4rem', marginBottom: '1rem' }} />
             <h3 style={{ color: '#fff', fontFamily: 'Rajdhani,sans-serif' }}>No products yet</h3>
             <p>Click "Add New Product" to get started.</p>
           </div>
@@ -227,8 +227,10 @@ const FarmerManageProducts = () => {
                           display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0,
                         }}>
                           {p.images && p.images.length > 0 ? (
-                            <img src={p.images[0]} alt={p.name} style={{ width: '100%', height: '100%', objectFit: 'cover' }} onError={(e: any) => { e.target.style.display='none'; }} />
-                          ) : <span style={{ fontSize: '1.2rem' }}>🌿</span>}
+                            <img src={p.images[0]} alt={p.name} style={{ width: '100%', height: '100%', objectFit: 'cover' }} onError={(e: any) => { (e.target as any).style.display='none'; }} />
+                          ) : (
+                            <span style={{ fontSize: '1.2rem' }} />
+                          )}
                         </div>
                         <div>
                           <div style={{ fontWeight: 600, color: '#fff', fontSize: '0.88rem' }}>{p.name}</div>
@@ -237,7 +239,7 @@ const FarmerManageProducts = () => {
                       </div>
                     </td>
                     <td><span className="hh-badge-success">{p.category}</span></td>
-                    <td style={{ fontWeight: 700, color: 'var(--hh-primary)' }}>₹{p.price} / {p.unit || 'kg'}</td>
+                    <td style={{ fontWeight: 700, color: 'var(--hh-primary)' }}>₹{p.price} {'/'} {p.unit || 'kg'}</td>
                     <td style={{ color: 'var(--hh-text-muted)', textDecoration: 'line-through', fontSize: '0.83rem' }}>—</td>
                     <td>
                       <span className={p.stock > 0 ? 'hh-badge-success' : 'hh-badge-danger'}>
@@ -250,11 +252,11 @@ const FarmerManageProducts = () => {
                         <button
                           onClick={() => openEdit(p)}
                           style={{ background: 'rgba(0,200,83,0.1)', border: '1px solid var(--hh-border)', borderRadius: 6, color: 'var(--hh-primary)', padding: '4px 12px', cursor: 'pointer', fontSize: '0.78rem', fontWeight: 600 }}
-                        >✏️ Edit</button>
+                        >Edit</button>
                         <button
                           onClick={() => setConfirmDelete(p._id)}
                           style={{ background: 'rgba(255,82,82,0.1)', border: '1px solid rgba(255,82,82,0.3)', borderRadius: 6, color: '#ff5252', padding: '4px 12px', cursor: 'pointer', fontSize: '0.78rem', fontWeight: 600 }}
-                        >🗑️ Delete</button>
+                        >Delete</button>
                       </div>
                     </td>
                   </tr>
@@ -279,7 +281,7 @@ const FarmerManageProducts = () => {
               {/* Modal Header */}
               <div style={{ padding: '1.5rem 2rem', borderBottom: '1px solid var(--hh-border)', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                 <h3 style={{ fontFamily: 'Rajdhani,sans-serif', fontWeight: 800, color: '#fff', margin: 0, fontSize: '1.5rem' }}>
-                  {editId ? '✏️ Edit Product' : '+ New Product'}
+                  {editId ? 'Edit Product' : '+ New Product'}
                 </h3>
                 <button onClick={() => setShowModal(false)} style={{ background: 'none', border: 'none', color: 'var(--hh-text-muted)', fontSize: '1.4rem', cursor: 'pointer', lineHeight: 1 }}>×</button>
               </div>
@@ -356,7 +358,7 @@ const FarmerManageProducts = () => {
                 <div style={{ padding: '1rem 2rem', borderTop: '1px solid var(--hh-border)', display: 'flex', gap: '0.8rem', justifyContent: 'flex-end' }}>
                   <button type="button" onClick={() => setShowModal(false)} className="hh-btn-outline" style={{ cursor: 'pointer' }}>Cancel</button>
                   <button type="submit" className="hh-btn-primary" style={{ cursor: 'pointer', minWidth: 120, justifyContent: 'center' }} disabled={saving}>
-                    {saving ? '⏳ Saving...' : editId ? '✅ Update Product' : '✅ Add Product'}
+                    {saving ? 'Saving...' : editId ? 'Update Product' : 'Add Product'}
                   </button>
                 </div>
               </form>
@@ -368,7 +370,7 @@ const FarmerManageProducts = () => {
         {confirmDelete && (
           <div style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.8)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 2100 }}>
             <div style={{ background: 'var(--hh-bg-card)', border: '1px solid rgba(255,82,82,0.35)', borderRadius: 'var(--hh-radius-lg)', padding: '2rem', maxWidth: 400, width: '100%', textAlign: 'center' }}>
-              <div style={{ fontSize: '3rem', marginBottom: '0.8rem' }}>🗑️</div>
+              <div style={{ fontSize: '3rem', marginBottom: '0.8rem' }} />
               <h4 style={{ color: '#fff', fontFamily: 'Rajdhani,sans-serif', marginBottom: '0.5rem' }}>Delete Product?</h4>
               <p style={{ color: 'var(--hh-text-muted)', fontSize: '0.88rem', marginBottom: '1.5rem' }}>This action cannot be undone.</p>
               <div style={{ display: 'flex', gap: '0.8rem', justifyContent: 'center' }}>

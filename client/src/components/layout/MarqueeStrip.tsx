@@ -1,8 +1,8 @@
 const items = [
-  '🌿 100% Organic', '🚚 Free Shipping ₹499+', '🥦 Farm Fresh', '⭐ Trusted by 2L+ Customers',
-  '🔒 Secure Payments', '🌾 15K+ Verified Farmers', '♻️ Eco Friendly Packaging', '💚 No Preservatives',
-  '🌿 100% Organic', '🚚 Free Shipping ₹499+', '🥦 Farm Fresh', '⭐ Trusted by 2L+ Customers',
-  '🔒 Secure Payments', '🌾 15K+ Verified Farmers', '♻️ Eco Friendly Packaging', '💚 No Preservatives',
+  '100% Organic', 'Free Shipping ₹499+', 'Farm Fresh', 'Trusted by 2L+ Customers',
+  'Secure Payments', '15K+ Verified Farmers', 'Eco Friendly Packaging', 'No Preservatives',
+  '100% Organic', 'Free Shipping ₹499+', 'Farm Fresh', 'Trusted by 2L+ Customers',
+  'Secure Payments', '15K+ Verified Farmers', 'Eco Friendly Packaging', 'No Preservatives',
 ];
 
 const MarqueeStrip = () => (

@@ -54,12 +54,12 @@ const LoginPage = () => {
       }}>
         
         {/* Botanical border decorations matching "Crop Connect" style */}
-        <FloatingDeco emoji="🌿" top="-20px" left="-20px" size={40} rotate={-30} />
-        <FloatingDeco emoji="🌾" top="10%" right="-25px" size={48} rotate={15} />
-        <FloatingDeco emoji="🥔" bottom="20%" left="-15px" size={28} rotate={-10} />
-        <FloatingDeco emoji="🍂" bottom="-15px" right="-10px" size={36} rotate={45} />
-        <FloatingDeco emoji="🥜" top="50%" left="-20px" size={24} rotate={20} />
-        <FloatingDeco emoji="🌰" top="30%" right="-15px" size={20} rotate={-20} />
+        <FloatingDeco emoji="" top="-20px" left="-20px" size={40} rotate={-30} />
+        <FloatingDeco emoji="" top="10%" right="-25px" size={48} rotate={15} />
+        <FloatingDeco emoji="" bottom="20%" left="-15px" size={28} rotate={-10} />
+        <FloatingDeco emoji="" bottom="-15px" right="-10px" size={36} rotate={45} />
+        <FloatingDeco emoji="" top="50%" left="-20px" size={24} rotate={20} />
+        <FloatingDeco emoji="" top="30%" right="-15px" size={20} rotate={-20} />
 
         {/* Logo matching the Sun/Leaf burst */}
         <div style={{ textAlign: 'center', marginBottom: '1.5rem', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>

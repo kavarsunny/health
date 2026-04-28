@@ -17,19 +17,19 @@ const Sidebar = () => {
   };
 
   const navItems = [
-    { icon: '📊', label: 'Dashboard',   to: '/farmer/dashboard' },
-    { icon: '📦', label: 'My Products', to: '/farmer/products' },
-    { icon: '🛒', label: 'Orders',      to: '/farmer/orders' },
-    { icon: '💰', label: 'Earnings',    to: '/farmer/earnings' },
-    { icon: '📈', label: 'Analytics',   to: '/farmer/analytics' },
-    { icon: '⚙️', label: 'Settings',    to: '/farmer/settings' },
+    { icon: '', label: 'Dashboard',   to: '/farmer/dashboard' },
+    { icon: '', label: 'My Products', to: '/farmer/products' },
+    { icon: '', label: 'Orders',      to: '/farmer/orders' },
+    { icon: '', label: 'Earnings',    to: '/farmer/earnings' },
+    { icon: '', label: 'Analytics',   to: '/farmer/analytics' },
+    { icon: '', label: 'Settings',    to: '/farmer/settings' },
   ];
 
   return (
     <aside className="hh-admin-sidebar">
       <div style={{ padding: '1rem 1.5rem', borderBottom: '1px solid var(--hh-border)', marginBottom: '1rem' }}>
         <div style={{ fontFamily: 'Rajdhani, sans-serif', fontSize: '1.4rem', fontWeight: 800, background: 'var(--hh-grad-primary)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text' }}>
-          🌾 Farmer Portal
+          Farmer Portal
         </div>
         <div style={{ fontSize: '0.75rem', color: 'var(--hh-text-muted)', marginTop: '0.2rem' }}>HealthyHaat</div>
       </div>
@@ -44,9 +44,9 @@ const Sidebar = () => {
         </Link>
       ))}
       <div style={{ borderTop: '1px solid var(--hh-border)', marginTop: '1rem', paddingTop: '0.5rem' }}>
-        <Link to="/" className="hh-sidebar-item"><span>🏠</span><span>Back to Store</span></Link>
+        <Link to="/" className="hh-sidebar-item"><span></span><span>Back to Store</span></Link>
         <button onClick={handleLogout} className="hh-sidebar-item" style={{ width: '100%', textAlign: 'left', background: 'none', border: 'none', cursor: 'pointer' }}>
-          <span>🚪</span><span>Logout</span>
+          <span></span><span>Logout</span>
         </button>
       </div>
     </aside>
@@ -57,10 +57,10 @@ const FarmerDashboard = () => {
   const { user } = useAuth();
   
   const stats = [
-    { label: 'Total Products', value: '24', icon: '📦', change: '+3 this week' },
-    { label: 'Active Orders',  value: '12', icon: '🛒', change: '+2 today' },
-    { label: 'This Month',     value: '₹48,200', icon: '💰', change: '+18% vs last month' },
-    { label: 'Avg Rating',     value: '4.9 ⭐', icon: '🌟', change: 'Top 5% of farmers' },
+    { label: 'Total Products', value: '24', icon: '', change: '+3 this week' },
+    { label: 'Active Orders',  value: '12', icon: '', change: '+2 today' },
+    { label: 'This Month',     value: '₹48,200', icon: '', change: '+18% vs last month' },
+    { label: 'Avg Rating',     value: '4.9', icon: '', change: 'Top 5% of farmers' },
   ];
 
   const recentOrders = [
@@ -76,7 +76,7 @@ const FarmerDashboard = () => {
       <div className="hh-admin-content">
         <div style={{ marginBottom: '2rem' }}>
           <h1 style={{ fontFamily: 'Rajdhani, sans-serif', fontSize: '2.2rem', fontWeight: 800, color: '#fff' }}>
-            Welcome back, {(user as any)?.name || 'Farmer'} 🌿
+            Welcome back, {(user as any)?.name || 'Farmer'}
           </h1>
           <p style={{ color: 'var(--hh-text-muted)', fontSize: '0.9rem' }}>
             Here's what's happening with your farm today.
@@ -89,7 +89,7 @@ const FarmerDashboard = () => {
             <div key={s.label} className="col-md-6 col-xl-3">
               <div className="hh-stat-card">
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '0.8rem' }}>
-                  <span style={{ fontSize: '1.8rem' }}>{s.icon}</span>
+                  <span style={{ fontSize: '1.8rem' }} />
                   <span style={{ fontSize: '0.72rem', color: 'var(--hh-primary)', background: 'rgba(0,200,83,0.1)', borderRadius: 6, padding: '2px 8px', fontWeight: 600 }}>{s.change}</span>
                 </div>
                 <div className="hh-stat-card-num">{s.value}</div>
@@ -140,9 +140,9 @@ const FarmerDashboard = () => {
           <h5 style={{ fontFamily: 'Rajdhani, sans-serif', fontWeight: 700, color: '#fff', marginBottom: '1rem' }}>Quick Actions</h5>
           <div style={{ display: 'flex', gap: '1rem', flexWrap: 'wrap' }}>
             {[
-              { label: '📦 Manage My Products', to: '/farmer/products', style: 'primary' },
-              { label: '🛒 View All Orders',  to: '/farmer/orders',       style: 'outline' },
-              { label: '📈 View Analytics',   to: '/farmer/analytics',    style: 'outline' },
+              { label: 'Manage My Products', to: '/farmer/products', style: 'primary' },
+              { label: 'View All Orders',  to: '/farmer/orders',       style: 'outline' },
+              { label: 'View Analytics',   to: '/farmer/analytics',    style: 'outline' },
             ].map((a) => (
               <Link
                 key={a.label}

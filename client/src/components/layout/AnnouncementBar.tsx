@@ -1,9 +1,9 @@
 import { useState, useEffect } from 'react';
 
 const messages = [
-  '🌿 Farm-Fresh Delivered to Your Door | Use code <strong>FRESH20</strong> for 20% OFF',
-  '🚚 Free Shipping on orders above ₹499 | Order before 5 PM for same-day dispatch',
-  '🎁 Shop for ₹599+ and grab a surprise gift! | Limited time offer',
+  'Farm-Fresh Delivered to Your Door | Use code <strong>FRESH20</strong> for 20% OFF',
+  'Free Shipping on orders above ₹499 | Order before 5 PM for same-day dispatch',
+  'Shop for ₹599+ and grab a surprise gift! | Limited time offer',
 ];
 
 const AnnouncementBar = () => {
